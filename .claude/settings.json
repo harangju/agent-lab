@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "semantic-scholar": {
+      "command": "uvx",
+      "args": ["semantic-scholar-fastmcp-mcp-server"],
+      "env": {
+        "S2_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
