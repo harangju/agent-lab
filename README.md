@@ -24,23 +24,21 @@ This is a GitHub template repo. Click **"Use this template"** to create your own
 
 2. **Set your direction.** In `CLAUDE.md` under "Current Direction", add 1–2 lines describing what the lab is working on now.
 
-3. **(Optional) Add a Semantic Scholar API key.** The Semantic Scholar MCP server is pre-configured in `.claude/settings.json`. Replace `your-api-key-here` with your key, or remove the `env` block to use the free tier. Free tier is 100 requests / 5 min — a `/sprint` can burn through this quickly. Get a key at [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api).
+3. **(Optional) Add a Semantic Scholar API key.** The Semantic Scholar MCP server is pre-configured in `.claude/settings.json`. Replace `your-api-key-here` with your key, or remove the `env` block to use the free tier. Free tier is 100 requests / 5 min — an `/explore` can burn through this quickly. Get a key at [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api).
 
 4. **Run Claude Code** from the repo root. The skills will be available as slash commands.
 
 ## How to Use
 
-Pick the workflow that matches your stage:
+Pick the skill that matches your stage:
 
 | You have...          | Run...                   |
 | -------------------- | ------------------------ |
-| A topic, no idea yet | `/sprint [topic]`        |
-| An idea              | `/review-idea [idea]`    |
-| A design             | `/review-design`         |
-| Results              | `/review-results`        |
-| A draft              | `/review-draft [path]`   |
-| Reviewer comments    | `/review-rr`             |
-| A talk to prep       | `/presentation`          |
+| A topic, no idea yet | `/explore [topic]`       |
+| An idea or design    | `/plan [idea/design]`    |
+| Results              | `/analyze [results]`     |
+| A draft or talk      | `/write [path]`          |
+| Feedback to address  | `/revise [feedback]`     |
 
 Let them argue. Steer the debate as PI — break ties, redirect, ask follow-ups.
 
@@ -66,38 +64,39 @@ MECE decomposition of research critique. Each persona owns one dimension. Lead i
 
 ## Workflows
 
-Three workflow types. Sprint for exploration, Review for everything with a presenter, Presentation for sequential talk prep.
+Skills map to the research pipeline. Each skill is a stage where the group argues about your work.
 
 ```
-Explore → Design → Execute → Analyze → Write
-                                          ↓
-                                       Iterate
-                                      ↗  ↑  ↖
-                              Draft    Present  R&R
-                              Review   Review   Review
+explore → plan → [execute] → analyze → write
+                                         ↓
+                                       revise ←→ (loops back to any stage)
 ```
 
-Bootstrapping: Sprint → Review (idea) → Review (design). Revision can loop back to earlier stages.
+Bootstrapping: explore → plan. Revision can loop back to earlier stages.
 
-### Sprint
+### Explore
 
-Parallel exploration. No presenter — everyone searches independently and synthesizes.
+Parallel exploration. No presenter — everyone searches independently and synthesizes. `/explore [topic]`
 
-### Review
+### Plan
 
-Present → critique → debate → synthesize. One template, parameterized by what's being reviewed.
+Present → critique → debate. Covers both early ideas (go/no-go) and concrete designs (methodology review). `/plan [idea or design]`
 
-| Skill             | What's reviewed          | Personas                                           | Output                          |
-| ----------------- | ------------------------ | -------------------------------------------------- | ------------------------------- |
-| `/review-idea`    | New idea                 | All 6                                              | Go/no-go + refined direction    |
-| `/review-design`  | Method plan              | Lead, Methodologist, Skeptic, Connector            | Validated design                |
-| `/review-results` | Results + interpretation | Lead, Methodologist, Skeptic, Visionary, Connector | Interpretation + story          |
-| `/review-draft`   | Manuscript               | All 6                                              | Structured feedback             |
-| `/review-rr`      | Reviews + manuscript     | Lead, Methodologist, Skeptic, Visionary, Newcomer  | Revision plan + response letter |
+### Analyze
 
-### Presentation
+Present results → argue over interpretation → build narrative. The group debates what the results mean, not just whether they're correct. `/analyze [results]`
 
-Sequential section-by-section review with live defense. Structurally different from Review — teammates react as they go, catching "you lost me at section 2."
+### Write
+
+Phased critique of any written artifact — manuscript, talk, poster. Phase 1: extract argument + search literature. Phase 2: evaluate by dimension. Phase 3: debate readiness. `/write [path]`
+
+### Revise
+
+Triage incoming feedback — reviewer comments, collaborator notes, PI comments — and plan revision. The group debates what to concede vs. push back on, then produces a revision plan. `/revise [feedback]`
+
+### Reflect
+
+Meta-learning. Synthesizes PI feedback from `log/` into candidate lab norms and persona calibration suggestions. `/reflect`
 
 ## Context Management
 
@@ -143,13 +142,11 @@ When a specific persona is consistently miscalibrated, update its spawn prompt i
 └── .claude/
     ├── settings.json                # MCP config, permissions
     └── skills/
-        ├── sprint/SKILL.md
-        ├── review-idea/SKILL.md
-        ├── review-design/SKILL.md
-        ├── review-results/SKILL.md
-        ├── review-draft/SKILL.md
-        ├── review-rr/SKILL.md
-        ├── presentation/SKILL.md
+        ├── explore/SKILL.md
+        ├── plan/SKILL.md
+        ├── analyze/SKILL.md
+        ├── write/SKILL.md
+        ├── revise/SKILL.md
         └── reflect/SKILL.md
 ```
 
