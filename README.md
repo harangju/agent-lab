@@ -6,7 +6,17 @@ Built on [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams).
 
 **Key principle:** Surface tensions, don't force consensus. Disagreements are logged, not resolved. You break ties.
 
-## Setup
+## Quick Start
+
+Have Claude Code? Run this in any repo:
+
+```
+claude "Set up the agent lab in this repo! https://github.com/harangju/agent-lab/"
+```
+
+Claude will clone the template, copy the skills and config into your project, and walk you through setup.
+
+## Manual Setup
 
 This is a GitHub template repo. Click **"Use this template"** to create your own copy, then:
 
