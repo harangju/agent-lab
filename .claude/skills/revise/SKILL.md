@@ -1,8 +1,9 @@
 ---
 name: revise
 description: Triage feedback and plan revision
+personas: Skeptic, Methodologist, Visionary, Newcomer
 ---
-Create an agent team to process this feedback $ARGUMENTS.
+Process this feedback: $ARGUMENTS
 
 Input: feedback on your work — reviewer comments, collaborator notes, PI comments, self-identified issues, or any combination.
 
@@ -12,7 +13,6 @@ Step 1 — Triage (parallel):
 - Visionary: does addressing these critiques risk watering down the contribution? Where should we push back to protect the core claim?
 
 Step 2 — Plan (depends on Step 1):
-- Lead: draft a revision plan and point-by-point response strategy. For each piece of feedback: concede, push back, or reframe?
 - Newcomer: check that proposed responses are clear and persuasive to outsiders
 
 Step 3 — Debate:

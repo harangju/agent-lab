@@ -1,11 +1,11 @@
 ---
 name: write
 description: Critique a manuscript, talk, or any written artifact
+personas: Skeptic, Methodologist, Visionary, Newcomer, Connector
 ---
-Create an agent team to critique this written work $ARGUMENTS.
+Critique this written work: $ARGUMENTS
 
 Phase 1 (parallel):
-- Lead: extract the core argument and contribution claim
 - Skeptic: search for related and competing work
 - Connector: search for complementary work in adjacent fields
 

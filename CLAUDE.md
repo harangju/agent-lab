@@ -18,7 +18,7 @@
 <!-- PI maintains this. 1-2 lines on what the lab is working on now. Agents: orient your work around this. -->
 
 ## Session Protocol
-- At session start, read `context.md` for current state. When spawning teammates, read `personas.md` for role assignments.
+- At session start, read `context.md` for current state. Use `/team` to spawn the research group.
 - During the session, work and return results. Do not write to files — avoids conflicts when personas run in parallel.
 - To checkpoint, run `/save` (appends to `log/`, rewrites `context.md`).
 
