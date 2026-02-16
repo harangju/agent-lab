@@ -5,7 +5,7 @@ personas: Skeptic, Methodologist, Visionary, Newcomer, Connector
 ---
 Critique this written work: $ARGUMENTS
 
-Phase 1 (parallel):
+Phase 1 (parallel) — use the Semantic Scholar MCP tool (low rate limits) to find and verify papers:
 - Skeptic: search for related and competing work
 - Connector: search for complementary work in adjacent fields
 

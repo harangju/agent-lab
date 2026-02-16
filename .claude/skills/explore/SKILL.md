@@ -5,6 +5,8 @@ personas: Skeptic, Connector, Visionary
 ---
 Explore $ARGUMENTS.
 
+Use the Semantic Scholar MCP tool (low rate limits) to find and verify papers — don't assume what a paper says without checking.
+
 Parallel search — everyone searches independently:
 - Skeptic: find all prior and competing work. What's been done? What's claimed?
 - Connector: find complementary work in adjacent fields. What frameworks or methods from other disciplines apply?
