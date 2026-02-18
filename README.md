@@ -40,6 +40,8 @@ Pick the skill that matches your stage:
 | Notes, need prose    | `/draft [section]`       |
 | A draft or talk      | `/review [path]`         |
 | Feedback to address  | `/revise [feedback]`     |
+| Ready to start       | `/team`                  |
+| End of session       | `/save`                  |
 
 Let them argue. Steer the debate as PI — break ties, redirect, ask follow-ups.
 
@@ -103,6 +105,14 @@ Triage incoming feedback — reviewer comments, collaborator notes, PI comments 
 
 Meta-learning. Synthesizes PI feedback from `log/` into candidate lab norms and persona calibration suggestions. `/reflect`
 
+### Team
+
+Spawn the full research group as a persistent agent team. Run this at the start of a session to bring all personas online. `/team`
+
+### Save
+
+Checkpoint the session — Lead appends a log entry to `log/` and rewrites `context.md` with compacted state. `/save`
+
 ## Context Management
 
 State persists across sessions through three layers.
@@ -153,7 +163,9 @@ When a specific persona is consistently miscalibrated, update its spawn prompt i
         ├── draft/SKILL.md
         ├── review/SKILL.md
         ├── revise/SKILL.md
-        └── reflect/SKILL.md
+        ├── reflect/SKILL.md
+        ├── team/SKILL.md
+        └── save/SKILL.md
 ```
 
 ## License
