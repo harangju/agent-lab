@@ -8,10 +8,10 @@ Built on [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams).
 
 ## Quick Start
 
-Have Claude Code? Run this in any repo:
+Have Claude Code? Run this in Claude in any repo:
 
 ```
-claude "Set up the agent lab in this repo! https://github.com/harangju/agent-lab/"
+Set up the agent lab in this repo! https://github.com/harangju/agent-lab/
 ```
 
 Claude will clone the template, copy the skills and config into your project, and walk you through setup.
