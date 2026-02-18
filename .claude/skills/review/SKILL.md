@@ -1,5 +1,5 @@
 ---
-name: write
+name: review
 description: Critique a manuscript, talk, or any written artifact
 personas: Skeptic, Methodologist, Visionary, Newcomer, Connector
 ---

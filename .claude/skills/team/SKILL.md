@@ -7,7 +7,7 @@ Spawn a persistent research group team to work on: $ARGUMENTS
 ## Steps
 
 1. Read `context.md` for current state.
-2. If $ARGUMENTS starts with a skill name (explore, plan, write, analyze, revise), read that skill's `SKILL.md` to get:
+2. If $ARGUMENTS starts with a skill name (explore, plan, draft, review, analyze, revise), read that skill's `SKILL.md` to get:
    - The `personas` field from the frontmatter — only spawn those personas
    - The task structure — use it to assign work and coordinate phases
    Then treat the rest of $ARGUMENTS as the task input for that skill.

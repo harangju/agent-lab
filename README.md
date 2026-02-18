@@ -37,7 +37,8 @@ Pick the skill that matches your stage:
 | A topic, no idea yet | `/explore [topic]`       |
 | An idea or design    | `/plan [idea/design]`    |
 | Results              | `/analyze [results]`     |
-| A draft or talk      | `/write [path]`          |
+| Notes, need prose    | `/draft [section]`       |
+| A draft or talk      | `/review [path]`         |
 | Feedback to address  | `/revise [feedback]`     |
 
 Let them argue. Steer the debate as PI — break ties, redirect, ask follow-ups.
@@ -67,9 +68,9 @@ MECE decomposition of research critique. Each persona owns one dimension. Lead i
 Skills map to the research pipeline. Each skill is a stage where the group argues about your work.
 
 ```
-explore → plan → [execute] → analyze → write
-                                         ↓
-                                       revise ←→ (loops back to any stage)
+explore → plan → [execute] → analyze → draft → review
+                                                  ↓
+                                                revise ←→ (loops back to any stage)
 ```
 
 Bootstrapping: explore → plan. Revision can loop back to earlier stages.
@@ -86,9 +87,13 @@ Present → critique → debate. Covers both early ideas (go/no-go) and concrete
 
 Present results → argue over interpretation → build narrative. The group debates what the results mean, not just whether they're correct. `/analyze [results]`
 
-### Write
+### Draft
 
-Phased critique of any written artifact — manuscript, talk, poster. Phase 1: extract argument + search literature. Phase 2: evaluate by dimension. Phase 3: debate readiness. `/write [path]`
+Generate prose from notes using rhetorical structure templates. Each section has a template encoding the standard moves — Abstract (Nature summary paragraph format), Introduction (CARS model), Results (figure-driven blocks), Discussion (inverted funnel), Methods (technique-organized). `/draft [section]`
+
+### Review
+
+Phased critique of any written artifact — manuscript, talk, poster. Phase 1: extract argument + search literature. Phase 2: evaluate by dimension. Phase 3: debate readiness. `/review [path]`
 
 ### Revise
 
@@ -145,7 +150,8 @@ When a specific persona is consistently miscalibrated, update its spawn prompt i
         ├── explore/SKILL.md
         ├── plan/SKILL.md
         ├── analyze/SKILL.md
-        ├── write/SKILL.md
+        ├── draft/SKILL.md
+        ├── review/SKILL.md
         ├── revise/SKILL.md
         └── reflect/SKILL.md
 ```
