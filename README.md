@@ -168,6 +168,13 @@ When a specific persona is consistently miscalibrated, update its spawn prompt i
         └── save/SKILL.md
 ```
 
+## Vocabulary
+
+Useful words when talking to Claude:
+
+- **connective tissue** — prose that links sections or ideas (drafting)
+- **load-bearing** — assumptions or components critical to the argument (ideation)
+
 ## License
 
 MIT
