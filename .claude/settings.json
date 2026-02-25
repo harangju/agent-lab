@@ -7,5 +7,17 @@
         "S2_API_KEY": "your-api-key-here"
       }
     }
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Bottle.aiff"
+          }
+        ]
+      }
+    ]
   }
 }
