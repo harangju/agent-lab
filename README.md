@@ -6,34 +6,45 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 **Key principle:** Surface tensions, don't paper over them. When personas disagree, Lead works the disagreement down to its crux and takes a position grounded in it. Only high-stakes or irreversible calls come to you.
 
-## Quick Start
+## Install
 
-Have Claude Code? Run this in Claude in any repo:
+The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
+
+Quickest: in Claude Code, say
 
 ```
-Set up the agent lab in this repo! https://github.com/harangju/agent-lab/
+Install the agent lab skills from https://github.com/harangju/agent-lab/ into ~/.claude/skills
 ```
 
-Claude will clone the template, copy the skills and config into your project, and walk you through setup.
+Manual install. To get updates with `git pull`, clone the repo and symlink the skills in:
 
-## Manual Setup
+```bash
+git clone https://github.com/harangju/agent-lab.git ~/agent-lab
+mkdir -p ~/.claude/skills
+for s in lab draft save; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
+```
 
-This is a GitHub template repo. Click **"Use this template"** to create your own copy, then:
+To keep your own edits (personas, norms, `STYLE.md`) private, copy the folders with `cp -R` instead of symlinking them. This is a public repo, so anything you commit to a clone goes public when you push.
 
-1. **Set your field.** Open `CLAUDE.md` and replace `[field]` on line 1 with your research area (e.g., "computational neuroscience", "mechanism design", "synthetic biology").
+**Paper search (recommended).** The personas use two tools when they're connected:
 
-2. **Set your direction.** In `CLAUDE.md` under "Current Direction", add 1–2 lines describing what the lab is working on now.
+- [Semantic Scholar](https://www.semanticscholar.org/product/api) for exact paper lookup and citation graphs
+- [Consensus](https://consensus.app) for question-level literature search
 
-3. **(Optional) Add a Semantic Scholar API key.** The Semantic Scholar MCP server is pre-configured in `.mcp.json` (requires [`uv`](https://docs.astral.sh/uv/)). To use a key, export `S2_API_KEY` in your shell. Leave it unset to use the free tier, which allows 100 requests per 5 minutes; a literature-heavy `/lab` run can use that up quickly. Get a key at [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api).
+Add Semantic Scholar at user scope (requires [`uv`](https://docs.astral.sh/uv/)):
 
-4. **Run Claude Code** from the repo root. The skills will be available as slash commands.
+```bash
+claude mcp add --transport stdio --scope user semantic-scholar -- uvx semantic-scholar-fastmcp
+```
+
+The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab` run can use up. With a key, add `--env SEMANTIC_SCHOLAR_API_KEY=<your key>` right after `add`. Connect Consensus from claude.ai's connector settings.
 
 ## How to Use
 
 | Command | What it does |
 | ------- | ------------ |
-| `/lab <task>` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
-| `/draft <section or file> [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
+| `/lab [task]` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
+| `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
 | `/save [topic]` | Checkpoint: append a session log, rewrite `context.md`, and propose lab norms when your feedback keeps recurring. |
 
 Examples:
@@ -56,7 +67,7 @@ Let them argue. Steer the debate as PI: break ties, redirect, ask follow-ups. Fo
 
 ## Personas
 
-A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `personas.md`.
+A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `.claude/skills/lab/references/personas.md`.
 
 | Persona | Dimension | Asks | Prevents |
 |---------|-----------|------|----------|
@@ -76,18 +87,19 @@ A MECE decomposition of research critique: each persona owns one dimension. Spaw
 
 ## Context Management
 
-State persists across sessions through three layers.
+The lab keeps its rules in the skills and its state in your project.
 
-| `CLAUDE.md`   | `context.md`            | `log/`                   |
-| ------------- | ----------------------- | ------------------------ |
-| How to behave | What matters now        | Everything that happened |
-| Stable        | Rewritten every session | Append-only              |
-| You maintain  | Lead maintains          | Lead maintains           |
+| In the skills (all projects) | `context.md` (per project) | `log/` (per project) |
+| ---------------------------- | -------------------------- | -------------------- |
+| How to behave: principles, report format, personas, norms, style | What matters now | Everything that happened |
+| Stable; you approve changes | Rewritten by every `/save` | Append-only |
+
+Your project's own `AGENTS.md` or `CLAUDE.md` still applies as usual. If a project has no `context.md` yet, the Lead orients from those files and the project's README or plan.
 
 ### Session flow
 
 ```
-Session starts  → Lead reads context.md
+Session starts  → Lead reads context.md (or the project's own docs)
 During session  → personas work and return results, no file writes
 Session ends    → /save appends a session log to log/
                 → /save rewrites context.md via compaction
@@ -99,25 +111,31 @@ Personas don't write files during the session, which avoids conflicts when they 
 
 The lab improves by learning from your feedback. `/save` logs your steering (tie-breaks, corrections, quality signals, persona calibration). When a pattern recurs across logs, `/save` proposes one of two changes, and applies it only with your approval:
 
-1. **Lab norms → `CLAUDE.md`**, which every session reads.
-2. **Persona tuning → `personas.md`**, for a persona that is consistently miscalibrated.
+1. **Lab norms → `lab/references/norms.md`**, which every `/lab` run follows.
+2. **Persona tuning → `lab/references/personas.md`**, for a persona that is consistently miscalibrated.
+
+A lesson that's specific to one project goes in that project's `context.md` instead.
 
 ## File Structure
 
 ```
-├── CLAUDE.md                        # lab rules + session protocol (auto-loaded)
-├── personas.md                      # persona spawn prompts (read by Lead)
-├── context.md                       # compacted state (Lead maintains)
-├── log/                             # session logs (append-only)
-│   └── YYYY-MM-DD-HHmm-topic.md
-├── .mcp.json                        # Semantic Scholar MCP server
-└── .claude/
-    ├── settings.json                # hooks
-    └── skills/
-        ├── lab/SKILL.md
-        ├── draft/SKILL.md           # writing workflow
-        ├── draft/references/        # STYLE.md + section templates (loaded on demand)
-        └── save/SKILL.md
+.claude/skills/
+├── lab/
+│   ├── SKILL.md                 # Lead protocol, principles, report format
+│   └── references/
+│       ├── personas.md          # persona spawn prompts
+│       └── norms.md             # your standing lab norms
+├── draft/
+│   ├── SKILL.md                 # writing workflow
+│   └── references/              # STYLE.md + section templates (loaded on demand)
+└── save/SKILL.md                # session log + context.md compaction
+```
+
+In each project, `/save` creates:
+
+```
+context.md                       # compacted state
+log/YYYY-MM-DD-HHmm-topic.md     # session logs (append-only)
 ```
 
 ## Vocabulary

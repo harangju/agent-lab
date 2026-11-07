@@ -37,7 +37,7 @@ Add the new log file to a "Session logs" list at the bottom (create the list if 
 ## 3. Propose norms (don't write them)
 
 Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply:
-- as a candidate Lab Norm for `CLAUDE.md`, or
-- as a persona tweak for `personas.md`
+- as a candidate lab norm for `${CLAUDE_SKILL_DIR}/../lab/references/norms.md`, or
+- as a persona tweak for `${CLAUDE_SKILL_DIR}/../lab/references/personas.md`
 
-Edit those files only after the PI approves. If nothing recurs, skip this step.
+Edit those files only after the PI approves. They apply across all projects, so a project-specific lesson belongs in `context.md` instead. If nothing recurs, skip this step.
