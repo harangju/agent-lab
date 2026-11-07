@@ -32,7 +32,8 @@ This is a GitHub template repo. Click **"Use this template"** to create your own
 
 | Command | What it does |
 | ------- | ------------ |
-| `/lab <task>` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a draft to review, or feedback to triage. Lead picks the right personas and phases. |
+| `/lab <task>` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
+| `/draft <section or file> [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
 | `/save [topic]` | Checkpoint: append a session log, rewrite `context.md`, and propose lab norms when your feedback keeps recurring. |
 
 Examples:
@@ -41,7 +42,15 @@ Examples:
 /lab explore how LLM agents coordinate without a shared memory
 /lab critique this design: notes/plan.md
 /lab review drafts/intro.md
+/draft results section from notes/results.md
 ```
+
+### Writing
+
+`/draft` keeps everything in its own `references/` folder:
+
+- **`STYLE.md`** holds the sentence, punctuation, content, grammar, and composition rules, your voice and phrasing, the response-letter rules, and the hard constraints. Edit it to match your own voice. A `STYLE.md` in the project you're writing in, such as a paper's or a grant's, adds to it and wins on conflicts.
+- **Section templates**, loaded one at a time as a task needs them: abstract (Nature summary paragraph), introduction, theory, related work, results (paragraph and full section), discussion, methods, grant section, and response letter, plus paragraph and narrative structure.
 
 Let them argue. Steer the debate as PI: break ties, redirect, ask follow-ups. Follow-ups go back to the same personas, who keep their context.
 
@@ -106,6 +115,8 @@ The lab improves by learning from your feedback. `/save` logs your steering (tie
     ├── settings.json                # hooks
     └── skills/
         ├── lab/SKILL.md
+        ├── draft/SKILL.md           # writing workflow
+        ├── draft/references/        # STYLE.md + section templates (loaded on demand)
         └── save/SKILL.md
 ```
 

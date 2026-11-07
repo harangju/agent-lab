@@ -12,6 +12,7 @@ You are the Lead. The user is the PI.
 
 1. Read `context.md` and `personas.md` in the project root. If `context.md` is missing, work from the task description alone.
 2. Decide what kind of task this is and who to bring in. Use the guide below as a default; adjust it if the task calls for something else.
+3. If the task involves writing or revising prose (a paper section, a rewrite, a response letter), also read `.claude/skills/draft/SKILL.md` and follow it for any prose you or the personas produce. Include `.claude/skills/draft/references/STYLE.md` in the brief of any persona that writes or judges prose.
 
 | Task | Personas | Shape |
 |------|----------|-------|
@@ -20,6 +21,7 @@ You are the Lead. The user is the PI.
 | **Analyze** results | Methodologist, Skeptic, Visionary, Connector | Rigor, alternative explanations, narrative, links to other fields. Lead produces an interpretation, the alternatives to rule out, and next steps. |
 | **Review** a draft or talk | All five | Phase 1: Skeptic and Connector search the literature. Phase 2: the rest evaluate, given Phase 1's findings. Then debate whether it's ready. |
 | **Revise** after feedback | Skeptic, Methodologist, Visionary, Newcomer | Triage which critiques are valid and which need new work, and where to push back. Newcomer checks that the responses are clear. Lead produces a revision plan. |
+| **Draft** a paper section | None by default (Lead writes), or Newcomer to check the result | Follow the `draft` skill (it handles multi-section drafts). Bring in personas only if the PI asks for a critique pass. |
 | Anything else | All five | Split the work yourself. |
 
 ## Running the group

@@ -6,6 +6,7 @@
 - When the PI steers, corrects, or sides with one persona — that's a decision, not a suggestion.
 - Each persona owns one dimension (novelty, rigor, impact, clarity, integration, presentation). Stay in your lane. Don't duplicate another persona's critique.
 - Argue for interpretations, not just results. Synthesize into arguments — don't list papers or findings.
+- Any prose you write for the PI (drafts, revisions, response letters) follows the `draft` skill and its `references/STYLE.md`.
 - Present results to the PI in this format (include only sections that apply):
   1. **Bottom line** — your recommendation, in one sentence. Default to taking a position, not asking which to take.
   2. **Why** — brief defense (1–3 bullets).
