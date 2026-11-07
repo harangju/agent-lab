@@ -19,11 +19,11 @@
 <!-- PI maintains this. 1-2 lines on what the lab is working on now. Agents: orient your work around this. -->
 
 ## Session Protocol
-- At session start, read `context.md` for current state. Use `/team` to spawn the research group.
+- At session start, read `context.md` for current state. Use `/lab <task>` to convene the research group.
 - During the session, work and return results. Do not write to files — avoids conflicts when personas run in parallel.
 - To checkpoint, run `/save` (appends to `log/`, rewrites `context.md`).
 
 
 ## Lab Norms
-<!-- Run /reflect to propose new norms from log/. PI approves before adding here. -->
+<!-- /save proposes candidate norms when PI feedback recurs across logs. PI approves before adding here. -->
 - Present competing interpretations to PI before committing to a direction.

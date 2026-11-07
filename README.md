@@ -1,10 +1,10 @@
 # Agent Lab
 
-A team of AI scientist colleagues — not assistants who execute, but peers who think, argue, and push back. Each has distinct values and taste. The value is in the dialectic.
+A team of AI scientist colleagues: not assistants who execute, but peers who think, argue, and push back. Each has distinct values and taste. The value is in the dialectic.
 
-Built on [Claude Code Agent Teams](https://code.claude.com/docs/en/agent-teams). Lead is the team lead; other personas are teammates. You (the PI) steer through Lead. Coordination, messaging, and task management are handled by Agent Teams natively.
+Lead is the main Claude session. The other personas run as parallel [subagents](https://code.claude.com/docs/en/sub-agents). Lead briefs them, relays disagreements between them for a round or two, and reports to you (the PI). If you've enabled the experimental [Agent Teams](https://code.claude.com/docs/en/agent-teams) feature, `/lab` can run them as a persistent team instead.
 
-**Key principle:** Surface tensions, don't force consensus. Disagreements are logged, not resolved. You break ties.
+**Key principle:** Surface tensions, don't paper over them. When personas disagree, Lead works the disagreement down to its crux and takes a position grounded in it. Only high-stakes or irreversible calls come to you.
 
 ## Quick Start
 
@@ -24,34 +24,34 @@ This is a GitHub template repo. Click **"Use this template"** to create your own
 
 2. **Set your direction.** In `CLAUDE.md` under "Current Direction", add 1–2 lines describing what the lab is working on now.
 
-3. **(Optional) Add a Semantic Scholar API key.** The Semantic Scholar MCP server is pre-configured in `.claude/settings.json`. Replace `your-api-key-here` with your key, or remove the `env` block to use the free tier. Free tier is 100 requests / 5 min — an `/explore` can burn through this quickly. Get a key at [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api).
+3. **(Optional) Add a Semantic Scholar API key.** The Semantic Scholar MCP server is pre-configured in `.mcp.json` (requires [`uv`](https://docs.astral.sh/uv/)). To use a key, export `S2_API_KEY` in your shell. Leave it unset to use the free tier, which allows 100 requests per 5 minutes; a literature-heavy `/lab` run can use that up quickly. Get a key at [semanticscholar.org/product/api](https://www.semanticscholar.org/product/api).
 
 4. **Run Claude Code** from the repo root. The skills will be available as slash commands.
 
 ## How to Use
 
-Pick the skill that matches your stage:
+| Command | What it does |
+| ------- | ------------ |
+| `/lab <task>` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a draft to review, or feedback to triage. Lead picks the right personas and phases. |
+| `/save [topic]` | Checkpoint: append a session log, rewrite `context.md`, and propose lab norms when your feedback keeps recurring. |
 
-| You have...          | Run...                   |
-| -------------------- | ------------------------ |
-| A topic, no idea yet | `/explore [topic]`       |
-| An idea or design    | `/plan [idea/design]`    |
-| Results              | `/analyze [results]`     |
-| Notes, need prose    | `/draft [section]`       |
-| A draft or talk      | `/review [path]`         |
-| Feedback to address  | `/revise [feedback]`     |
-| Ready to start       | `/team`                  |
-| End of session       | `/save`                  |
+Examples:
 
-Let them argue. Steer the debate as PI — break ties, redirect, ask follow-ups.
+```
+/lab explore how LLM agents coordinate without a shared memory
+/lab critique this design: notes/plan.md
+/lab review drafts/intro.md
+```
+
+Let them argue. Steer the debate as PI: break ties, redirect, ask follow-ups. Follow-ups go back to the same personas, who keep their context.
 
 ## Personas
 
-MECE decomposition of research critique. Each persona owns one dimension. Lead is the team lead (presents, defends, handles persistence); others are teammates. Spawn prompts live in `personas.md`.
+A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `personas.md`.
 
 | Persona | Dimension | Asks | Prevents |
 |---------|-----------|------|----------|
-| **Lead** (team lead) | Presentation | Steel-mans the argument, defends it, handles persistence | Weak framing, unclear narrative |
+| **Lead** (you're talking to it) | Presentation | Briefs the group, works disagreements to a crux, presents the argument | Weak framing, unclear narrative |
 | **Skeptic** | Novelty | "Has this been done? What's actually new?" | Wasting time on existing work |
 | **Methodologist** | Rigor | "Is this sound? Would it generalize?" | Publishing claims you can't defend |
 | **Visionary** | Impact | "So what? Who cares? Think bigger." | Working on incremental stuff that won't matter |
@@ -64,54 +64,6 @@ MECE decomposition of research critique. Each persona owns one dimension. Lead i
 - Methodologist wants more experiments → Visionary asks if it's worth the time
 - Connector draws links to adjacent fields → Skeptic asks if those links are real
 - Newcomer says the framing is unclear → Lead defends, others weigh in on whether the confusion reveals a real gap
-
-## Workflows
-
-Skills map to the research pipeline. Each skill is a stage where the group argues about your work.
-
-```
-explore → plan → [execute] → analyze → draft → review
-                                                  ↓
-                                                revise ←→ (loops back to any stage)
-```
-
-Bootstrapping: explore → plan. Revision can loop back to earlier stages.
-
-### Explore
-
-Parallel exploration. No presenter — everyone searches independently and synthesizes. `/explore [topic]`
-
-### Plan
-
-Present → critique → debate. Covers both early ideas (go/no-go) and concrete designs (methodology review). `/plan [idea or design]`
-
-### Analyze
-
-Present results → argue over interpretation → build narrative. The group debates what the results mean, not just whether they're correct. `/analyze [results]`
-
-### Draft
-
-Generate prose from notes using rhetorical structure templates. Each section has a template encoding the standard moves — Abstract (Nature summary paragraph format), Introduction (CARS model), Results (figure-driven blocks), Discussion (inverted funnel), Methods (technique-organized). `/draft [section]`
-
-### Review
-
-Phased critique of any written artifact — manuscript, talk, poster. Phase 1: extract argument + search literature. Phase 2: evaluate by dimension. Phase 3: debate readiness. `/review [path]`
-
-### Revise
-
-Triage incoming feedback — reviewer comments, collaborator notes, PI comments — and plan revision. The group debates what to concede vs. push back on, then produces a revision plan. `/revise [feedback]`
-
-### Reflect
-
-Meta-learning. Synthesizes PI feedback from `log/` into candidate lab norms and persona calibration suggestions. `/reflect`
-
-### Team
-
-Spawn the full research group as a persistent agent team. Run this at the start of a session to bring all personas online. `/team`
-
-### Save
-
-Checkpoint the session — Lead appends a log entry to `log/` and rewrites `context.md` with compacted state. `/save`
 
 ## Context Management
 
@@ -126,45 +78,34 @@ State persists across sessions through three layers.
 ### Session flow
 
 ```
-Session starts  → agents read context.md
-During session  → agents work and return results, no file writes
-Session ends    → Lead appends session log to log/
-                → Lead rewrites context.md via compaction
+Session starts  → Lead reads context.md
+During session  → personas work and return results, no file writes
+Session ends    → /save appends a session log to log/
+                → /save rewrites context.md via compaction
 ```
 
-Agents don't write files during the session — avoids conflicts when running in parallel. All persistence happens at the end through Lead.
+Personas don't write files during the session, which avoids conflicts when they run in parallel. All persistence happens at the end, through `/save`.
 
 ### Learning loop
 
-The lab improves by learning from your feedback. Two levels:
+The lab improves by learning from your feedback. `/save` logs your steering (tie-breaks, corrections, quality signals, persona calibration). When a pattern recurs across logs, `/save` proposes one of two changes, and applies it only with your approval:
 
-**1. Lab norms → `CLAUDE.md`** (all personas read)
-
-Your steering — tie-breaks, corrections, quality signals — gets logged to `log/` with everything else. Periodically run `/reflect` to synthesize recurring patterns into Lab Norms.
-
-**2. Persona tuning → `personas.md`** (per-persona)
-
-When a specific persona is consistently miscalibrated, update its spawn prompt in `personas.md` directly.
+1. **Lab norms → `CLAUDE.md`**, which every session reads.
+2. **Persona tuning → `personas.md`**, for a persona that is consistently miscalibrated.
 
 ## File Structure
 
 ```
 ├── CLAUDE.md                        # lab rules + session protocol (auto-loaded)
-├── personas.md                      # spawn prompts (read by Lead on demand)
+├── personas.md                      # persona spawn prompts (read by Lead)
 ├── context.md                       # compacted state (Lead maintains)
-├── log/                             # session logs (Lead appends)
-│   └── YYYY-MM-DD-HHmm.md
+├── log/                             # session logs (append-only)
+│   └── YYYY-MM-DD-HHmm-topic.md
+├── .mcp.json                        # Semantic Scholar MCP server
 └── .claude/
-    ├── settings.json                # MCP config, permissions
+    ├── settings.json                # hooks
     └── skills/
-        ├── explore/SKILL.md
-        ├── plan/SKILL.md
-        ├── analyze/SKILL.md
-        ├── draft/SKILL.md
-        ├── review/SKILL.md
-        ├── revise/SKILL.md
-        ├── reflect/SKILL.md
-        ├── team/SKILL.md
+        ├── lab/SKILL.md
         └── save/SKILL.md
 ```
 
@@ -172,8 +113,8 @@ When a specific persona is consistently miscalibrated, update its spawn prompt i
 
 Useful words when talking to Claude:
 
-- **connective tissue** — prose that links sections or ideas (drafting)
-- **load-bearing** — assumptions or components critical to the argument (ideation)
+- **connective tissue**: prose that links sections or ideas
+- **load-bearing**: assumptions or components critical to the argument
 
 ## License
 

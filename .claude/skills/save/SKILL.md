@@ -1,13 +1,15 @@
 ---
 name: save
 description: Checkpoint the session — write a log entry and update context.md
+disable-model-invocation: true
+argument-hint: "[topic]"
 ---
 
-Save a checkpoint of the current session. This does two things:
+Save a checkpoint of the current session. This does three things:
 
 ## 1. Append a log entry
 
-Create a new file in `log/` with the filename `YYYY-MM-DD-HHmm-topic.md` (24h time, short topic slug). If $ARGUMENTS includes a topic, use it for the slug.
+Create a new file in `log/` (create the directory if needed) with the filename `YYYY-MM-DD-HHmm-topic.md` (24h time, short topic slug). If $ARGUMENTS includes a topic, use it for the slug.
 
 Header format: `# YYYY-MM-DD HH:MM — Topic`
 
@@ -30,4 +32,12 @@ Compact `context.md` so a fresh agent can pick up where we left off. Include:
 
 Drop: resolved debates, superseded framings, dead-end details (those live in `log/`).
 
-Add the new log file to the session logs list at the bottom.
+Add the new log file to a "Session logs" list at the bottom (create the list if it isn't there).
+
+## 3. Propose norms (don't write them)
+
+Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply:
+- as a candidate Lab Norm for `CLAUDE.md`, or
+- as a persona tweak for `personas.md`
+
+Edit those files only after the PI approves. If nothing recurs, skip this step.
