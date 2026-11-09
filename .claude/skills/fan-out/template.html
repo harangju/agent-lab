@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--
+  Fan-out review page template.
+  Copy this file, keep its structure and look, and replace every {{placeholder}}.
+  The filled-in items marked EXAMPLE show the voice to aim for. Delete them before publishing.
+  Before/Now/Same lines say what the reader sees or does: in the app, on the page, in the result.
+  No function, file or table names there; put that detail, if it matters, in the small .meta note under the change.
+  Every change gets a visual: screenshots, a chart, a table, an illustration, or old and new text side by side.
+  Screenshots: a before/now pair taken from the same place, in img/ next to this page. Frames default to landscape;
+  add class="tall" for a phone screen or class="page" for a whole page.
+  Charts and illustrations: one combined figure (class="chart") drawn as inline SVG with the page's colors,
+  before and now on the same scale, one plain headline, and the sample size and source in the note below.
+  Optional parts: the Same line, the Try line, the "Try it yourself" box, the Spec only section.
+  Drop the ones that don't fit the batch.
+-->
+<title>{{Project}} {{version}} Review</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+:root {
+  --paper: #f4f1ea; --card: #fbfaf6; --ink: #22261f; --muted: #6d7066; --line: #ddd8cc;
+  --sage: #3f4a38; --sage-soft: #e3e8dc;
+  --ok: #2f6b3a; --ok-bg: #e2efe2; --warn: #8a5a12; --warn-bg: #f6ebd5; --no: #8b2f2f; --no-bg: #f5e1de;
+  --display: "Newsreader", Georgia, serif;
+  --body: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #171a15; --card: #1f231c; --ink: #e9e7df; --muted: #a3a698; --line: #343a2f;
+  --sage: #b9c9a8; --sage-soft: #2a3324;
+  --ok: #9fd3a5; --ok-bg: #1e3322; --warn: #e6bf7a; --warn-bg: #3a2e18; --no: #eba49c; --no-bg: #3d2220; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #171a15; --card: #1f231c; --ink: #e9e7df; --muted: #a3a698; --line: #343a2f;
+  --sage: #b9c9a8; --sage-soft: #2a3324;
+  --ok: #9fd3a5; --ok-bg: #1e3322; --warn: #e6bf7a; --warn-bg: #3a2e18; --no: #eba49c; --no-bg: #3d2220; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 var(--body); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.2rem; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--sage); }
+code { font-family: var(--mono); font-size: .85em; background: var(--sage-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+header { display: flex; flex-direction: column; gap: 14px; }
+.lede { font-size: 1.15rem; color: var(--muted); }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .95rem; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: .9rem; color: var(--muted); }
+
+.pill { display: inline-block; font-size: .78rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+.pill.part { background: var(--warn-bg); color: var(--warn); }
+.pill.no { background: var(--no-bg); color: var(--no); }
+
+.try { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
+.try ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; max-width: 70ch; }
+
+section.group { display: flex; flex-direction: column; gap: 8px; }
+section.group > .intro { color: var(--muted); margin-bottom: 8px; }
+
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 28px; padding-block: 26px; border-top: 1px solid var(--line); }
+.item .text { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.item .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.item .meta { font-size: .88rem; color: var(--muted); }
+.item .tryit { font-size: .95rem; }
+.item .tryit b { font-weight: 600; }
+.note { font-size: .95rem; color: var(--warn); }
+
+.change { display: grid; grid-template-columns: 4.6em minmax(0, 1fr); gap: 8px 12px; margin: 0; }
+.change dt { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; padding-top: .3em; }
+.change dd { margin: 0; max-width: 62ch; }
+.change dt.was, .change dd.was { color: var(--muted); }
+.change dt.now { color: var(--ok); }
+.change dt.same { color: var(--warn); }
+.change ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 4px; }
+
+.shots { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 6px; width: 240px; max-width: 100%; }
+figure img, figure .empty { width: 100%; border-radius: 10px; border: 1px solid var(--line); display: block; background: var(--card); }
+figure .empty { aspect-ratio: 4 / 3; border-style: dashed; display: grid; place-items: center; color: var(--muted); font-size: .8rem; }
+figure.tall { width: 170px; }
+figure.tall .empty { aspect-ratio: 9 / 19.5; }
+figure.page { width: 230px; }
+figure.page .empty { aspect-ratio: 8.5 / 11; }
+figure.chart { width: 440px; }
+figure.chart svg { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+.chart text { font: 12px var(--body); fill: var(--muted); }
+.chart text.label { font-size: 13px; fill: var(--ink); }
+.chart .axis { stroke: var(--line); stroke-width: 1; }
+.chart .zero { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart .b { stroke: var(--muted); stroke-width: 2; fill: var(--card); }
+.chart .n { stroke: var(--ok); stroke-width: 2; fill: var(--ok); }
+figcaption { font-size: .78rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+figure.after figcaption { color: var(--ok); }
+
+.lists { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.box { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.box ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 8px; }
+.box li { max-width: 60ch; }
+
+@media (max-width: 720px) {
+  .item { grid-template-columns: minmax(0, 1fr); }
+  figure, figure.tall, figure.page { width: calc(50% - 6px); }
+  figure.chart { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">{{Where the work is: a branch and PR, a doc, a folder}} · {{date}}</span>
+  <h1>{{Project}} {{batch}} Review</h1>
+  <p class="lede">Every change in this batch, brought together in one place and checked. Each one says what you saw <b>before</b> and what you see <b>now</b>. Grouped in the order you'd go through it.</p>
+  <div class="facts">
+    <span><b>{{n}}</b> changes</span>
+    <span><b>{{n}}</b> workers</span>
+    <span>{{Checks that pass, like "tests pass" or "read start to finish"}}</span>
+    <span><a href="{{url}}">{{Link to the work}}</a></span>
+  </div>
+  <div class="legend">
+    <span class="pill ok">Seen working</span> I checked it the way you would.
+    <span class="pill part">Partly seen</span> Done, and part of it checked.
+    <span class="pill no">Not seen</span> Done, but not checked the way you would.
+  </div>
+</header>
+
+<div class="try">
+  <h3>Try it yourself</h3>
+  <ol>
+    <li>{{What's ready to look at now, and where.}}</li>
+    <li>{{How to get anything you'd need to try it, or "ask me and I'll set it up".}}</li>
+    <li>{{The shortest walk through the main change.}}</li>
+  </ol>
+</div>
+
+<section class="group">
+  <span class="eyebrow">{{Worker or area}}</span>
+  <h2>{{Screen, section or question, in the user's words}}</h2>
+  <p class="intro">{{One line: whose view this is.}}</p>
+
+  <!-- EXAMPLE: seen working, with screenshots. Delete before publishing. -->
+  <div class="item">
+    <div class="text">
+      <div class="head"><h3>One deadline everywhere</h3><span class="pill ok">Seen working</span></div>
+      <dl class="change">
+        <dt class="was">Before</dt><dd class="was">For the same gift, the app and web page said "add your address by Dec 8", and the email said "by Dec 7".</dd>
+        <dt class="now">Now</dt><dd>The app, the web page and the email all say Dec 7. A phone in another time zone also shows Dec 7.</dd>
+      </dl>
+      <p class="tryit"><b>Try:</b> Home → the "Where should Alex's card go?" banner, then open the same card's web link.</p>
+      <p class="meta">Seen: the app banner and the web page both say Dec 7. Not resent: the email, which a test checks gives the same day.</p>
+    </div>
+    <div class="shots">
+      <figure class="before"><div class="empty">Image</div><figcaption>Before</figcaption></figure>
+      <figure class="after"><div class="empty">Image</div><figcaption>Now</figcaption></figure>
+    </div>
+  </div>
+
+  <!-- EXAMPLE: not seen, with a Same line and no screenshots. Delete before publishing. -->
+  <div class="item">
+    <div class="text">
+      <div class="head"><h3>The logo in every email opens the site</h3><span class="pill no">Not seen</span></div>
+      <dl class="change">
+        <dt class="was">Before</dt><dd class="was">The gold "Cadeau" at the top of each email was just text. Tapping it did nothing.</dd>
+        <dt class="now">Now</dt><dd>Tapping it opens heycadeau.com. It looks the same, with no underline.</dd>
+        <dt class="same">Same</dt><dd>There's still no App Store link in the emails. That's your call, below.</dd>
+      </dl>
+      <p class="meta">Not seen: the tests pass, but I didn't send an email to tap the logo.</p>
+    </div>
+    <div class="shots"></div>
+  </div>
+
+  <!-- EXAMPLE: a result, shown as one combined chart with before and now on the same axes. Delete before publishing. -->
+  <div class="item">
+    <div class="text">
+      <div class="head"><h3>Team size and rules raise messages on the full sample</h3><span class="pill ok">Seen working</span></div>
+      <dl class="change">
+        <dt class="was">Before</dt><dd class="was">On the 2,000-firm pilot, none of the three effects was clear. Every interval crossed zero.</dd>
+        <dt class="now">Now</dt><dd>On all 11,557 firms, bigger teams and more rules clearly mean more messages. Hierarchy still shows no effect.</dd>
+        <dt class="same">Same</dt><dd>The model and its controls. Only the sample changed.</dd>
+      </dl>
+      <p class="meta">Dots are estimates and bars are 95% intervals. I reran both and checked them against the results table. Source: {{results file}}.</p>
+    </div>
+    <div class="shots">
+      <figure class="chart">
+        <svg viewBox="0 0 440 215" role="img" aria-label="Before and now estimates for team size, rules and hierarchy">
+          <circle class="b" cx="164" cy="22" r="5"/><text x="174" y="26">Before: pilot</text>
+          <circle class="n" cx="274" cy="22" r="5"/><text x="284" y="26">Now: all firms</text>
+          <line class="zero" x1="225" y1="40" x2="225" y2="172"/>
+          <line class="axis" x1="160" y1="172" x2="420" y2="172"/>
+          <text class="label" x="14" y="64">Team size</text>
+          <line class="b" x1="192.5" y1="53" x2="290" y2="53"/><circle class="b" cx="241.25" cy="53" r="5"/>
+          <line class="n" x1="296.5" y1="67" x2="355" y2="67"/><circle class="n" cx="325.75" cy="67" r="5"/>
+          <text class="label" x="14" y="109">Rules</text>
+          <line class="b" x1="212" y1="98" x2="316" y2="98"/><circle class="b" cx="264" cy="98" r="5"/>
+          <line class="n" x1="264" y1="112" x2="303" y2="112"/><circle class="n" cx="283.5" cy="112" r="5"/>
+          <text class="label" x="14" y="154">Hierarchy</text>
+          <line class="b" x1="176.25" y1="143" x2="260.75" y2="143"/><circle class="b" cx="218.5" cy="143" r="5"/>
+          <line class="n" x1="215.25" y1="157" x2="247.75" y2="157"/><circle class="n" cx="231.5" cy="157" r="5"/>
+          <text x="160" y="190" text-anchor="middle">−0.2</text><text x="225" y="190" text-anchor="middle">0</text>
+          <text x="290" y="190" text-anchor="middle">0.2</text><text x="355" y="190" text-anchor="middle">0.4</text>
+          <text x="420" y="190" text-anchor="end">0.6</text>
+          <text x="290" y="208" text-anchor="middle">Effect on messages</text>
+        </svg>
+        <figcaption>Before and now</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- EXAMPLE: prose, partly seen, no Try line. The images are the page before and after. Delete before publishing. -->
+  <div class="item">
+    <div class="text">
+      <div class="head"><h3>The aims page fits on one page</h3><span class="pill part">Partly seen</span></div>
+      <dl class="change">
+        <dt class="was">Before</dt><dd class="was">The aims ran onto a second page, and Aim 3 repeated half of Aim 2.</dd>
+        <dt class="now">Now</dt><dd>One page, with two aims. The repeated half of Aim 3 is now the last step of Aim 2.</dd>
+        <dt class="same">Same</dt><dd>The budget section still pays for three aims. That's your call, below.</dd>
+      </dl>
+      <p class="meta">I read the aims page and the approach section side by side. I didn't reread the budget justification.</p>
+    </div>
+    <div class="shots">
+      <figure class="before page"><div class="empty">Page image</div><figcaption>Before · 2 pages</figcaption></figure>
+      <figure class="after page"><div class="empty">Page image</div><figcaption>Now · 1 page</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="text">
+      <div class="head"><h3>{{What changed, in the user's words}}</h3><span class="pill {{ok|part|no}}">{{Seen working|Partly seen|Not seen}}</span></div>
+      <dl class="change">
+        <dt class="was">Before</dt><dd class="was">{{What you saw or did before, with a concrete example.}}</dd>
+        <dt class="now">Now</dt><dd>{{What you see or do now, with the same example.}}</dd>
+        <dt class="same">Same</dt><dd>{{Optional: something nearby that didn't change.}}</dd>
+      </dl>
+      <p class="tryit"><b>Try:</b> {{Shortest path, like "Home → the banner".}}</p>
+      <p class="meta">{{What I saw, and what I didn't and why.}}</p>
+    </div>
+    <div class="shots">
+      <figure class="before"><img src="img/{{before}}.jpg" alt="{{What the before image shows}}"><figcaption>Before</figcaption></figure>
+      <figure class="after"><img src="img/{{after}}.jpg" alt="{{What the now image shows}}"><figcaption>Now</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="group">
+  <span class="eyebrow">Spec only</span>
+  <h2>{{Spec title}}</h2>
+  <p>Nothing is built. {{One or two lines on the plan.}} It's in <code>{{path to spec}}</code>, and {{n}} questions in it need you.</p>
+</section>
+
+<section class="group">
+  <span class="eyebrow">Fixed after review</span>
+  <h2>{{What you asked me to fix}}</h2>
+  <p class="intro">Here "Before" means before the fix. These fixes are in the same place as the rest.</p>
+  <!-- Same .item blocks as above. Add this section only after the first review. -->
+</section>
+
+<div class="lists">
+  <div class="box">
+    <h3>Found while checking</h3>
+    <ul>
+      <li><b>{{Problem, in one line.}}</b> {{Before and now, with an example.}}</li>
+      <li><s>{{A problem fixed after review.}}</s> Fixed, see above.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>Needs your call</h3>
+    <ul>
+      <li>{{An item left out because it needs a product decision, and what's there today.}}</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>Not tested anywhere</h3>
+    <ul>
+      <li>{{What couldn't be checked, and why.}}</li>
+      <li>{{What stayed untouched, like "Production. Nothing is deployed there."}}</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

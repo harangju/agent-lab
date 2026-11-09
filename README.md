@@ -8,7 +8,7 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
+The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). A fourth, `/fan-out`, is separate from the lab: it schedules a batch of work, lab work or any other kind. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
 
 Quickest: in Claude Code, say
 
@@ -21,7 +21,7 @@ Manual install. To get updates with `git pull`, clone the repo and symlink the s
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
 mkdir -p ~/.claude/skills
-for s in lab draft save; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
+for s in lab draft save fan-out; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
 ```
 
 To keep your own edits (personas, norms, `STYLE.md`) private, copy the folders with `cp -R` instead of symlinking them. This is a public repo, so anything you commit to a clone goes public when you push.
@@ -46,6 +46,7 @@ The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab`
 | `/lab [task]` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
 | `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
 | `/save [topic]` | Checkpoint: append a session log, rewrite `context.md`, and propose lab norms when your feedback keeps recurring. |
+| `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
 
 Examples:
 
@@ -54,6 +55,7 @@ Examples:
 /lab critique this design: notes/plan.md
 /lab review drafts/intro.md
 /draft results section from notes/results.md
+/fan-out the five open items in TODO.md
 ```
 
 ### Writing
@@ -64,6 +66,17 @@ Examples:
 - **Section templates**, loaded one at a time as a task needs them: abstract (Nature summary paragraph), introduction, theory, related work, results (paragraph and full section), discussion, methods, grant section, and response letter, plus paragraph and narrative structure.
 
 Let them argue. Steer the debate as PI: break ties, redirect, ask follow-ups. Follow-ups go back to the same personas, who keep their context.
+
+### Fan-out
+
+`/fan-out` is about scheduling, not critique. Hand it a batch of independent work, such as five grant sections, a list of open questions, or a release's worth of fixes. Lead then:
+
+1. Proposes a split and waits for your go. No two workers own the same thing, and every rule the pieces share gets one owner.
+2. Runs the workers in parallel. A worker can be a side session, a subagent, or a `/lab` or `/draft` run.
+3. Brings the pieces together, checks them the way you would, and fixes what breaks where they meet.
+4. Hands you one review page. Each change gets a Before and a Now, shown as a visual (screenshots, a chart, a table or an illustration), plus a tag saying whether Lead saw it working.
+
+You review once, at the end. Fixes from your review go on the same page.
 
 ## Personas
 
@@ -128,7 +141,11 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 ├── draft/
 │   ├── SKILL.md                 # writing workflow
 │   └── references/              # STYLE.md + section templates (loaded on demand)
-└── save/SKILL.md                # session log + context.md compaction
+├── save/SKILL.md                # session log + context.md compaction
+└── fan-out/
+    ├── SKILL.md                 # split, integrate, check, hand over one review
+    ├── template.html            # the review page
+    └── references/code.md       # extra steps when the batch is code
 ```
 
 In each project, `/save` creates:
