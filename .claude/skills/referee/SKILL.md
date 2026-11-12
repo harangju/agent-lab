@@ -1,6 +1,6 @@
 ---
 name: referee
-description: Turn a manuscript PDF the user marked up by hand (iPad/Apple Pencil, Preview, Acrobat) into a transcription of every note and a terse referee report in their voice, then revise it with them. Use when the user drops an annotated paper PDF and asks to transcribe their notes, draft a review from their markup, or work on it "the same way as the others".
+description: Turn a manuscript PDF the user marked up by hand (iPad/Apple Pencil, Preview, Acrobat) into a transcription of every note and a terse referee report in their voice, then revise it with them. Use when the user drops an annotated paper PDF and asks to transcribe their notes, draft a review from their markup, review a revised manuscript in a second round, or work on it "the same way as the others".
 argument-hint: "[path to the marked-up PDF] [tone or instructions]"
 ---
 Referee from markup: $ARGUMENTS
@@ -20,6 +20,7 @@ There are three deliverables, in this order, and the user usually checks in betw
 3. Extract the paper text once, to your scratchpad, for quoting and fact-checking later:
    `pdftotext -layout paper.pdf $SCRATCH/paper.txt`
 4. Work out the page offset (PDF page N is often manuscript page N−1 because of a cover page) and the total manuscript pages. Every note gets both numbers.
+5. If this is a revised manuscript, also read the user's round-1 review and the authors' response letter.
 
 ## 1. Find the ink
 
@@ -52,6 +53,7 @@ Copy the venue template and fill it from the notes. Read [references/voice.md](r
 - **Summary.** A few plain sentences: what they did and what they found, with the key numbers. Then one line of what's good, if the user's notes say so.
 - **Major comments.** Cluster the notes into a handful of problems, usually 3–5. Each one opens with a bold one-sentence claim, followed by a few sentences: what the paper does, why it's a problem, and what would fix it, ideally as a direct question.
 - **Minor comments.** Numbered, one to three sentences each. Wording, definitions, notation, missing details.
+- **Second round.** Open with a line on whether each round-1 major was resolved, then the new issues from the notes. An unresolved point the notes don't raise goes under possible additions.
 - **Source.** Every comment traces to the user's notes. Points you came up with yourself go in your chat message as "possible additions", not into the draft. The user adds the ones they want.
 - **Tone.** Use the tone the user asks for. "Scathing but respectful" means confused-reader framing ("I don't follow how…", "It's unclear what…"), giving the authors the benefit of the doubt while every point still lands.
 - **Leave the user's calls blank.** That means scores, the recommendation, and confidential comments to the editor, unless the user asks you to fill them or their notes state them.
@@ -59,27 +61,31 @@ Copy the venue template and fill it from the notes. Read [references/voice.md](r
 
 ### Check before you hand it over
 
-Do these yourself; the user will ask for them anyway.
+Do these before the user sees the draft; they will ask for them anyway.
 
-1. **Coverage.** Walk `comments.md` top to bottom. Each substantive note should land in a comment or be dropped on purpose. List what you dropped and why in your message.
-2. **Accuracy.** Grep `paper.txt` for every factual claim in the review: numbers, section references, "the paper never defines X". If the paper does address something, fix or cut the comment. A review that is wrong about the paper hurts the user.
-3. **Fairness.** For each comment, ask whether the authors could reply "we did that in Section X" or "that's standard". If they could, soften or drop it.
-4. **Voice.** Do one pass against voice.md's list of AI tells.
+1. **Coverage, yourself.** Walk `comments.md` top to bottom. Each substantive note should land in a comment or be dropped on purpose. List what you dropped and why in your message. This check needs the notes, so it stays with you.
+2. **Independent checkers.** Run the three checkers in [references/checkers.md](references/checkers.md) in parallel, each in fresh context with only the files it needs:
+   - **Accuracy** checks every factual claim in the review against `paper.txt`. A review that is wrong about the paper hurts the user. In a second round, it also checks the response letter's claims against the revised paper.
+   - **Author rebuttal** writes the authors' best reply to each comment ("we did that in Section X", "that's standard"). This is the fairness check.
+   - **Voice** checks every sentence against voice.md.
 
-Then report back briefly: where the files are, how many notes you transcribed, the majors in one line each, anything dropped, possible additions, and uncertain readings.
+   You drafted the review from the notes, so you read the paper the way the notes do. Fresh checkers catch what that reading misses.
+3. **Weigh the findings.** They are claims, not edits. Check each against `paper.txt` before acting. Fix confirmed errors, narrow comments a rebuttal partly answers, and apply voice rewrites. If a rebuttal sinks a whole point, flag it rather than drop it, because the point is the user's. checkers.md has the details.
+
+Then report back briefly: where the files are, how many notes you transcribed, the majors in one line each, anything dropped, the checks (what was flagged, changed, and rejected), possible additions, and uncertain readings.
 
 ## 4. Revise with the user
 
 Most of the session is this loop. The user's turns are short ("tldr", "is #3 fair?", "drop minor 4", "way too verbose", "commit and push").
 
 - **Re-read the file before every edit.** The user edits the review directly between turns. Keep their edits and wording verbatim unless they ask you to change them. Change only what they asked about.
-- **"Is this fair / accurate / true?"** Check it against `paper.txt` and give a verdict per comment first (fair / partly / wrong, with one line of why), then the suggested fix. Don't apply the fix until they say so, unless they already asked you to.
+- **"Is this fair / accurate / true?"** Check it against `paper.txt` and give a verdict per comment first (fair / partly / wrong, with one line of why), then the suggested fix. For a reading not anchored on yours, you can also run the rebuttal checker on just that comment. Don't apply the fix until they say so, unless they already asked you to.
 - **"tldr" / "explain #2".** Give a few lines in plain language. Don't edit anything.
 - **Restructuring.** When they say what a comment should argue ("it's two points: …"), rebuild it around their points in their order. Don't keep your old framing.
 - **Deletions.** Renumber after any deletion, and fix cross-references ("see Major 2").
 - **When they correct your voice** ("don't cite lines", "seems AI written"), fix it everywhere in the file, not only where they pointed. Then offer to add the rule to voice.md or to the project's memory so it sticks.
 - **Strategy questions** ("would this ever fit the journal?", "can I give major revision now and reject next round?"). Answer candidly, as a colleague would. It's their call, so don't edit the recommendation on your own.
-- **Second opinions.** If they ask you to check edits another model or session made, verify each one against the paper as if you hadn't seen it before.
+- **Second opinions.** When they paste or point to another model's, session's, or person's review or edits, treat every point as a claim. Check each one against the paper as if you hadn't seen it, then say where it's right, where it's wrong, and what it missed. Hold your own earlier claims to the same standard, and say so plainly when the evidence reverses one.
 
 ## 5. Commit
 
@@ -89,5 +95,6 @@ Only when asked. Use one commit per request, with a message naming the manuscrip
 
 - Cite line numbers in the review.
 - Invent a note the user didn't write, or a finding the paper doesn't contain.
+- Act on a checker's, another model's, or the authors' claim without checking it against the paper.
 - Rewrite the user's own wording when they only asked about something else.
 - Fill in scores, recommendations, or editor comments on your own initiative.

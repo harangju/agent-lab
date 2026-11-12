@@ -149,7 +149,7 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 └── referee/
     ├── SKILL.md                 # marked-up PDF → comments.md → review → revisions
     ├── scripts/find_ink.py      # locate handwriting and save zoomed crops
-    └── references/              # formats.md (comments + review), voice.md
+    └── references/              # formats.md (comments + review), voice.md, checkers.md
 ```
 
 In each project, `/save` creates:
