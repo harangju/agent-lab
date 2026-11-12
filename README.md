@@ -8,7 +8,7 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). A fourth, `/fan-out`, is separate from the lab: it schedules a batch of work, lab work or any other kind. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
+The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
 
 Quickest: in Claude Code, say
 
@@ -21,7 +21,7 @@ Manual install. To get updates with `git pull`, clone the repo and symlink the s
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
 mkdir -p ~/.claude/skills
-for s in lab draft save fan-out; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
+for s in lab draft save fan-out referee; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
 ```
 
 To keep your own edits (personas, norms, `STYLE.md`) private, copy the folders with `cp -R` instead of symlinking them. This is a public repo, so anything you commit to a clone goes public when you push.
@@ -142,10 +142,14 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 │   ├── SKILL.md                 # writing workflow
 │   └── references/              # STYLE.md + section templates (loaded on demand)
 ├── save/SKILL.md                # session log + context.md compaction
-└── fan-out/
-    ├── SKILL.md                 # split, integrate, check, hand over one review
-    ├── template.html            # the review page
-    └── references/code.md       # extra steps when the batch is code
+├── fan-out/
+│   ├── SKILL.md                 # split, integrate, check, hand over one review
+│   ├── template.html            # the review page
+│   └── references/code.md       # extra steps when the batch is code
+└── referee/
+    ├── SKILL.md                 # marked-up PDF → comments.md → review → revisions
+    ├── scripts/find_ink.py      # locate handwriting and save zoomed crops
+    └── references/              # formats.md (comments + review), voice.md
 ```
 
 In each project, `/save` creates:
