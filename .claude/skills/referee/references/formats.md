@@ -82,4 +82,4 @@ Use the venue's template. If the repo has none, use the journal's file in `venue
 ## Confidential Comments to the Editor
 ```
 
-Venue forms vary. Some (Management Science) open with question prompts, such as summary, contribution, method, impact, and writing, that sit above the detailed comments. Some (ISR) put a score table first. Some (PNAS) have a single "comments for the author" box. Keep the template's headings and boilerplate exactly as they are, and fill in only the answer slots.
+Venue forms vary. Management Science opens with question prompts that sit above the detailed comments. ISR puts a score table first. PNAS has a single "comments for the author" box. For these and MISQ, see [venues/](venues/). Keep the template's headings and boilerplate exactly as they are, and fill in only the answer slots.

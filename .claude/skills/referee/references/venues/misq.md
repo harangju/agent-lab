@@ -27,28 +27,8 @@ The notes often say "major", "minor", or "reject". Those words don't appear on M
 | major, skeptical | Unclear that a revision would result in a publishable paper. |
 | reject | Doubtful that a revision would result in a publishable paper. |
 
-## Template
+## Review file
 
-Use this when the repo has no MISQ `template.md` of its own:
+Use this only when the repo has no template or earlier review for this venue. If it has either, follow that instead.
 
-```markdown
-# Review: <ID>
-
-## Summary
-
-## Major Comments
-
-1. **...**
-
-## Minor Comments
-
-1. ...
-
-## Recommendation
-
-<!-- One of the five MISQ options; the user picks. -->
-
-## Confidential Comments to the Editors
-```
-
-The plural "Editors" is the form's wording. Everything above `## Recommendation` is for the authors. Everything under Confidential Comments must stay out of any file uploaded through Attach Files.
+Body: the generic review template in formats.md. After it, add `## Recommendation`, followed by the five options as a comment, then `## Confidential Comments to the Editors`. Use the plural "Editors", which is the form's own wording. Everything under Confidential Comments must stay out of any file uploaded through Attach Files.
