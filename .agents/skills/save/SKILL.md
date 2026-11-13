@@ -5,11 +5,13 @@ disable-model-invocation: true
 argument-hint: "[topic]"
 ---
 
+Paths like `references/...` and `scripts/...` are relative to this skill's folder, the one holding this SKILL.md. Resolve them to absolute paths in tool calls and when briefing subagents.
+
 Save a checkpoint of the current session. This does three things:
 
 ## 1. Append a log entry
 
-Create a new file in `log/` (create the directory if needed) with the filename `YYYY-MM-DD-HHmm-topic.md` (24h time, short topic slug). If $ARGUMENTS includes a topic, use it for the slug.
+Create a new file in `log/` (create the directory if needed) with the filename `YYYY-MM-DD-HHmm-topic.md` (24h time, short topic slug). If the user gave a topic, use it for the slug.
 
 Header format: `# YYYY-MM-DD HH:MM — Topic`
 
@@ -37,7 +39,7 @@ Add the new log file to a "Session logs" list at the bottom (create the list if 
 ## 3. Propose norms (don't write them)
 
 Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply:
-- as a candidate lab norm for `${CLAUDE_SKILL_DIR}/../lab/references/norms.md`, or
-- as a persona tweak for `${CLAUDE_SKILL_DIR}/../lab/references/personas.md`
+- as a candidate lab norm for `../lab/references/norms.md`, or
+- as a persona tweak for `../lab/references/personas.md`
 
 Edit those files only after the PI approves. They apply across all projects, so a project-specific lesson belongs in `context.md` instead. If nothing recurs, skip this step.

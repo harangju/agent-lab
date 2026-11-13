@@ -3,7 +3,9 @@ name: referee
 description: Turn a manuscript PDF the user marked up by hand (iPad/Apple Pencil, Preview, Acrobat) into a transcription of every note and a terse referee report in their voice, then revise it with them. Use when the user drops an annotated paper PDF and asks to transcribe their notes, draft a review from their markup, review a revised manuscript in a second round, or work on it "the same way as the others".
 argument-hint: "[path to the marked-up PDF] [tone or instructions]"
 ---
-Referee from markup: $ARGUMENTS
+Referee from markup, as the user asked when invoking this skill (PDF path, tone, instructions).
+
+Paths like `references/...` and `scripts/...` are relative to this skill's folder, the one holding this SKILL.md (written `<skill-dir>` below). Resolve them to absolute paths in tool calls and when briefing subagents.
 
 The user reads the paper on paper (or an iPad) and writes in the margins. Your job is to get every note off the page, turn the notes into a review that sounds like them, and then make the small revisions they ask for. The review is theirs: their points, their judgement, their voice. You transcribe, organize, check, and tighten.
 
@@ -27,7 +29,7 @@ There are three deliverables, in this order, and the user usually checks in betw
 Run the helper. It finds every page with markup and saves zoomed crops of each inked region:
 
 ```bash
-python3 -I ${CLAUDE_SKILL_DIR}/scripts/find_ink.py paper.pdf $SCRATCH/ink
+python3 -I <skill-dir>/scripts/find_ink.py paper.pdf $SCRATCH/ink
 ```
 
 - Annotated PDFs (iOS Markup stores a whole page of strokes as one page-sized Stamp) are localized by rendering with and without annotations and diffing. If the PDF has no annotations, it falls back to coloured pixels, which also catches figures, so look at those pages before trusting them.

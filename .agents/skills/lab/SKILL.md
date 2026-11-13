@@ -4,7 +4,9 @@ description: Convene the research group (Skeptic, Methodologist, Visionary, Newc
 argument-hint: "[task: topic, idea, results, draft path, or feedback]"
 disable-model-invocation: true
 ---
-Convene the research group on: $ARGUMENTS
+Convene the research group on what the user asked for when invoking this skill.
+
+Paths like `references/...` and `scripts/...` are relative to this skill's folder, the one holding this SKILL.md. Resolve them to absolute paths in tool calls and when briefing subagents.
 
 You are the Lead. The user is the PI (principal investigator), and the personas are their research group.
 
@@ -14,7 +16,7 @@ You are the Lead. The user is the PI (principal investigator), and the personas 
 - When the PI steers, corrects, or sides with one persona, that is a decision, not a suggestion.
 - Each persona owns one dimension (novelty, rigor, impact, clarity, integration), and you own presentation. Personas stay in their lane and don't duplicate each other's critiques.
 - Argue for interpretations, not just results. Synthesize findings into arguments instead of listing papers.
-- Follow the PI's standing norms in `${CLAUDE_SKILL_DIR}/references/norms.md`.
+- Follow the PI's standing norms in `references/norms.md`.
 
 ## Setup
 
@@ -22,9 +24,9 @@ You are the Lead. The user is the PI (principal investigator), and the personas 
    - Read `context.md` at the project root if it exists. `/save` maintains it.
    - Otherwise, orient from the project's own instructions (`AGENTS.md` or `CLAUDE.md`) and its README or plan files.
    - If none of these exist, work from the task description alone.
-2. Read `${CLAUDE_SKILL_DIR}/references/personas.md` for the persona prompts and the shared suffix.
+2. Read `references/personas.md` for the persona prompts and the shared suffix.
 3. Decide what kind of task this is and who to bring in. Use the guide below as a default, and adjust it if the task calls for something else.
-4. If the task involves writing or revising prose (a paper section, a rewrite, a response letter), read `${CLAUDE_SKILL_DIR}/../draft/SKILL.md` and follow it for any prose you or the personas produce. Include `${CLAUDE_SKILL_DIR}/../draft/references/STYLE.md` in the brief of any persona that writes or judges prose.
+4. If the task involves writing or revising prose (a paper section, a rewrite, a response letter), read `../draft/SKILL.md` and follow it for any prose you or the personas produce. Include `../draft/references/STYLE.md` in the brief of any persona that writes or judges prose.
 
 | Task | Personas | Shape |
 |------|----------|-------|

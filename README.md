@@ -8,20 +8,23 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three Claude Code skills (`/lab`, `/draft`, `/save`). Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
+The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, and the `/referee` checkers work best with subagents. Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
 
 Quickest: in Claude Code, say
 
 ```
-Install the agent lab skills from https://github.com/harangju/agent-lab/ into ~/.claude/skills
+Install the agent lab skills from https://github.com/harangju/agent-lab/ into ~/.agents/skills and ~/.claude/skills
 ```
 
 Manual install. To get updates with `git pull`, clone the repo and symlink the skills in:
 
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
-mkdir -p ~/.claude/skills
-for s in lab draft save fan-out referee; do ln -s ~/agent-lab/.claude/skills/$s ~/.claude/skills/$s; done
+mkdir -p ~/.agents/skills ~/.claude/skills
+for s in lab draft save fan-out referee; do
+  ln -s ~/agent-lab/.agents/skills/$s ~/.agents/skills/$s   # cross-client location
+  ln -s ~/agent-lab/.agents/skills/$s ~/.claude/skills/$s   # Claude Code
+done
 ```
 
 To keep your own edits (personas, norms, `STYLE.md`) private, copy the folders with `cp -R` instead of symlinking them. This is a public repo, so anything you commit to a clone goes public when you push.
@@ -80,7 +83,7 @@ You review once, at the end. Fixes from your review go on the same page.
 
 ## Personas
 
-A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `.claude/skills/lab/references/personas.md`.
+A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `.agents/skills/lab/references/personas.md`.
 
 | Persona | Dimension | Asks | Prevents |
 |---------|-----------|------|----------|
@@ -132,7 +135,7 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 ## File Structure
 
 ```
-.claude/skills/
+.agents/skills/               # .claude/skills is a symlink to this
 ├── lab/
 │   ├── SKILL.md                 # Lead protocol, principles, report format
 │   └── references/
