@@ -15,7 +15,7 @@ There are three deliverables, in this order, and the user usually checks in betw
 
 ## 0. Set up
 
-1. Read the project's own conventions first: `CLAUDE.md`/`AGENTS.md`, a venue `template.md`, and one or two finished reviews and `comments.md` files from earlier manuscripts. **The repo's existing files are the format spec.** Match their folder layout, file names, headings, and section order exactly. If the user says "like the others in X", open those.
+1. Read the project's own conventions first: `CLAUDE.md`/`AGENTS.md`, a venue `template.md`, and one or two finished reviews and `comments.md` files from earlier manuscripts. **The repo's existing files are the format spec.** Match their folder layout, file names, headings, and section order exactly. If the user says "like the others in X", open those. If the repo has nothing for this venue, check `references/venues/` for a file on the journal, such as [misq.md](references/venues/misq.md). It has the journal's form fields, its recommendation scale, and a template. The order of precedence is the repo's files, then the venue file, then the generic template in formats.md.
 2. Put the manuscript in its own folder the way the repo already does (typically `<venue>/<ID>/` holding the PDF, `comments.md`, and `<ID>.md` copied from the venue template). Use `git mv` for files that are already tracked. If there's no precedent, use that layout.
 3. Extract the paper text once, to your scratchpad, for quoting and fact-checking later:
    `pdftotext -layout paper.pdf $SCRATCH/paper.txt`

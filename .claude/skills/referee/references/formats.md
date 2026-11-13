@@ -56,7 +56,7 @@ Rules:
 
 ## Review
 
-Use the venue's template. If there isn't one, use this:
+Use the venue's template. If the repo has none, use the journal's file in `venues/` if there is one (for example, [venues/misq.md](venues/misq.md)). If not, use this:
 
 ```markdown
 # Review: <ID>
