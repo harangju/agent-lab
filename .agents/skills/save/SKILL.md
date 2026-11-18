@@ -1,6 +1,6 @@
 ---
 name: save
-description: Checkpoint the session — write a log entry and update context.md
+description: Checkpoint the session — write a log entry and update CONTEXT.md
 disable-model-invocation: true
 argument-hint: "[topic]"
 ---
@@ -23,9 +23,9 @@ Include everything tried, found, argued, and decided in this session — includi
 
 Log files are APPEND-ONLY. If the file already exists (continuing a topic), add a new section at the end. Never edit existing content.
 
-## 2. Rewrite `context.md`
+## 2. Rewrite `CONTEXT.md`
 
-Compact `context.md` so a fresh agent can pick up where we left off. Include:
+Compact `CONTEXT.md` (or existing `context.md` if the project already uses lowercase) so a fresh agent can pick up where we left off. Include:
 - Current research question and framing
 - Open questions and unresolved tensions
 - Decided directions (and why)
@@ -42,4 +42,4 @@ Skim earlier files in `log/`. If this session's PI feedback repeats a pattern th
 - as a candidate lab norm for `../lab/references/norms.md`, or
 - as a persona tweak for `../lab/references/personas.md`
 
-Edit those files only after the PI approves. They apply across all projects, so a project-specific lesson belongs in `context.md` instead. If nothing recurs, skip this step.
+Edit those files only after the PI approves. They apply across all projects, so a project-specific lesson belongs in `CONTEXT.md` instead. If nothing recurs, skip this step.

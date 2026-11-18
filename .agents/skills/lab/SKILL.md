@@ -21,7 +21,7 @@ You are the Lead. The user is the PI (principal investigator), and the personas 
 ## Setup
 
 1. Orient in the project:
-   - Read `context.md` at the project root if it exists. `/save` maintains it.
+   - Read `CONTEXT.md` (or `context.md`) at the project root if it exists. `/save` maintains it.
    - Otherwise, orient from the project's own instructions (`AGENTS.md` or `CLAUDE.md`) and its README or plan files.
    - If none of these exist, work from the task description alone.
 2. Read `references/personas.md` for the persona prompts and the shared suffix.

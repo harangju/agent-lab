@@ -8,7 +8,7 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, and the `/referee` checkers work best with subagents. Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`context.md` and `log/`).
+The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, and the `/referee` checkers work best with subagents. Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
 
 Quickest: in Claude Code, say
 
@@ -48,7 +48,7 @@ The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab`
 | ------- | ------------ |
 | `/lab [task]` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
 | `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
-| `/save [topic]` | Checkpoint: append a session log, rewrite `context.md`, and propose lab norms when your feedback keeps recurring. |
+| `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose lab norms when your feedback keeps recurring. |
 | `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
 
 Examples:
@@ -105,20 +105,20 @@ A MECE decomposition of research critique: each persona owns one dimension. Spaw
 
 The lab keeps its rules in the skills and its state in your project.
 
-| In the skills (all projects) | `context.md` (per project) | `log/` (per project) |
+| In the skills (all projects) | `CONTEXT.md` (per project) | `log/` (per project) |
 | ---------------------------- | -------------------------- | -------------------- |
 | How to behave: principles, report format, personas, norms, style | What matters now | Everything that happened |
 | Stable; you approve changes | Rewritten by every `/save` | Append-only |
 
-Your project's own `AGENTS.md` or `CLAUDE.md` still applies as usual. If a project has no `context.md` yet, the Lead orients from those files and the project's README or plan.
+Your project's own `AGENTS.md` or `CLAUDE.md` still applies as usual. If a project has no `CONTEXT.md` (or `context.md`) yet, the Lead orients from those files and the project's README or plan.
 
 ### Session flow
 
 ```
-Session starts  → Lead reads context.md (or the project's own docs)
+Session starts  → Lead reads CONTEXT.md (or context.md / the project's own docs)
 During session  → personas work and return results, no file writes
 Session ends    → /save appends a session log to log/
-                → /save rewrites context.md via compaction
+                → /save rewrites CONTEXT.md via compaction
 ```
 
 Personas don't write files during the session, which avoids conflicts when they run in parallel. All persistence happens at the end, through `/save`.
@@ -130,7 +130,7 @@ The lab improves by learning from your feedback. `/save` logs your steering (tie
 1. **Lab norms → `lab/references/norms.md`**, which every `/lab` run follows.
 2. **Persona tuning → `lab/references/personas.md`**, for a persona that is consistently miscalibrated.
 
-A lesson that's specific to one project goes in that project's `context.md` instead.
+A lesson that's specific to one project goes in that project's `CONTEXT.md` instead.
 
 ## File Structure
 
@@ -144,7 +144,7 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 ├── draft/
 │   ├── SKILL.md                 # writing workflow
 │   └── references/              # STYLE.md + section templates (loaded on demand)
-├── save/SKILL.md                # session log + context.md compaction
+├── save/SKILL.md                # session log + CONTEXT.md compaction
 ├── fan-out/
 │   ├── SKILL.md                 # split, integrate, check, hand over one review
 │   ├── template.html            # the review page
@@ -158,7 +158,7 @@ A lesson that's specific to one project goes in that project's `context.md` inst
 In each project, `/save` creates:
 
 ```
-context.md                       # compacted state
+CONTEXT.md                       # compacted state
 log/YYYY-MM-DD-HHmm-topic.md     # session logs (append-only)
 ```
 
