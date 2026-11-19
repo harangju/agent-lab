@@ -48,7 +48,7 @@ The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab`
 | ------- | ------------ |
 | `/lab [task]` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
 | `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
-| `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose lab norms when your feedback keeps recurring. |
+| `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose standing rules when your feedback keeps recurring. |
 | `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
 
 Examples:
@@ -125,12 +125,14 @@ Personas don't write files during the session, which avoids conflicts when they 
 
 ### Learning loop
 
-The lab improves by learning from your feedback. `/save` logs your steering (tie-breaks, corrections, quality signals, persona calibration). When a pattern recurs across logs, `/save` proposes one of two changes, and applies it only with your approval:
+`/save` logs your steering (tie-breaks, corrections, quality signals, persona calibration). When a pattern recurs across logs, `/save` proposes a standing rule routed to the file that governs it, and applies it only with your approval:
 
-1. **Lab norms → `lab/references/norms.md`**, which every `/lab` run follows.
-2. **Persona tuning → `lab/references/personas.md`**, for a persona that is consistently miscalibrated.
+1. **Agent workflow, coding, or communication → `AGENTS.md` / `CLAUDE.md`** (or user-level agent rules if cross-project).
+2. **Writing or formatting → `STYLE.md`** (project-level, or `draft/references/STYLE.md` across projects).
+3. **`/lab` deliberation norms → `lab/references/norms.md`**, which every `/lab` run follows.
+4. **`/lab` persona tuning → `lab/references/personas.md`**, for a persona that is consistently miscalibrated.
 
-A lesson that's specific to one project goes in that project's `CONTEXT.md` instead.
+A research lesson or decision specific to one project goes in that project's `CONTEXT.md` instead.
 
 ## File Structure
 

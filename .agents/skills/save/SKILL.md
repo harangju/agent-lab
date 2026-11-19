@@ -36,10 +36,12 @@ Drop: resolved debates, superseded framings, dead-end details (those live in `lo
 
 Add the new log file to a "Session logs" list at the bottom (create the list if it isn't there).
 
-## 3. Propose norms (don't write them)
+## 3. Propose standing rules (don't write them)
 
-Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply:
-- as a candidate lab norm for `../lab/references/norms.md`, or
-- as a persona tweak for `../lab/references/personas.md`
+Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply and route it to the file that governs that behavior:
+- **Agent workflow, coding, or communication style** — the project's `AGENTS.md` / `CLAUDE.md` (or user-level agent rules if cross-project)
+- **Prose, voice, or formatting rules** — the project's `STYLE.md` (or `../draft/references/STYLE.md` if cross-project)
+- **`/lab` deliberation norms** (only for `/lab` behavior) — `../lab/references/norms.md`
+- **`/lab` persona calibration** — `../lab/references/personas.md`
 
-Edit those files only after the PI approves. They apply across all projects, so a project-specific lesson belongs in `CONTEXT.md` instead. If nothing recurs, skip this step.
+Edit those files only after the PI approves. A project-specific research lesson or decision belongs in `CONTEXT.md` instead. If nothing recurs, skip this step.
