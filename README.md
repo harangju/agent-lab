@@ -8,7 +8,7 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, and the `/referee` checkers work best with subagents. Two more are separate from the lab. `/fan-out` schedules a batch of work, lab work or any other kind. `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
+The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, `/research`, and the `/referee` checkers work best with subagents. Three more sit alongside the lab: `/research` orchestrates a full stage-gated research loop from a starting question to a verified manuscript, `/fan-out` schedules a batch of independent work, and `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
 
 Quickest: in Claude Code, say
 
@@ -21,7 +21,7 @@ Manual install. To get updates with `git pull`, clone the repo and symlink the s
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
 mkdir -p ~/.agents/skills ~/.claude/skills
-for s in lab draft save fan-out referee; do
+for s in lab draft save fan-out referee research; do
   ln -s ~/agent-lab/.agents/skills/$s ~/.agents/skills/$s   # cross-client location
   ln -s ~/agent-lab/.agents/skills/$s ~/.claude/skills/$s   # Claude Code
 done
@@ -50,10 +50,13 @@ The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab`
 | `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
 | `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose standing rules when your feedback keeps recurring. |
 | `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
+| `/research [question or resume]` | Run a six-stage research loop from a starting question to a verified manuscript, composing `/lab`, `/draft`, `/save`, and `/fan-out` with automated 1-seed pilots, raw-log inspection, style/provenance linting, and five PI decision gates. |
 
 Examples:
 
 ```
+/research does double-blind peer review change acceptance gaps across subfields?
+/research resume
 /lab explore how LLM agents coordinate without a shared memory
 /lab critique this design: notes/plan.md
 /lab review drafts/intro.md
@@ -155,6 +158,11 @@ A research lesson or decision specific to one project goes in that project's `CO
     ├── SKILL.md                 # marked-up PDF → comments.md → review → revisions
     ├── scripts/find_ink.py      # locate handwriting and save zoomed crops
     └── references/              # formats.md (comments + review), voice.md, checkers.md
+└── research/
+    ├── SKILL.md                 # stage-gated research orchestrator (Stages 0–6, including R&R)
+    ├── template.html            # PI gate decision card
+    ├── references/              # gates.md (schemas + S-tier checks), scaffold.md, revision.md
+    └── scripts/                 # lint_manuscript.py, pilot_scan.py, pilot_workflow.py, stage4_review_workflow.py, checkpoint.py
 ```
 
 In each project, `/save` creates:

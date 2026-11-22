@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--
+  Research Gate Decision Card template.
+  Matches the agent-lab review aesthetic (Newsreader + Source Sans 3 + IBM Plex Mono, light/dark mode).
+  Replace every {{placeholder}} (or render via scripts/pilot_scan.py --gate-card).
+-->
+<title>{{Project}} · {{GateTitle}}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+:root {
+  --paper: #f4f1ea; --card: #fbfaf6; --ink: #22261f; --muted: #6d7066; --line: #ddd8cc;
+  --sage: #3f4a38; --sage-soft: #e3e8dc;
+  --ok: #2f6b3a; --ok-bg: #e2efe2; --warn: #8a5a12; --warn-bg: #f6ebd5; --no: #8b2f2f; --no-bg: #f5e1de;
+  --display: "Newsreader", Georgia, serif;
+  --body: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #171a15; --card: #1f231c; --ink: #e9e7df; --muted: #a3a698; --line: #343a2f;
+  --sage: #b9c9a8; --sage-soft: #2a3324;
+  --ok: #9fd3a5; --ok-bg: #1e3322; --warn: #e6bf7a; --warn-bg: #3a2e18; --no: #eba49c; --no-bg: #3d2220; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #171a15; --card: #1f231c; --ink: #e9e7df; --muted: #a3a698; --line: #343a2f;
+  --sage: #b9c9a8; --sage-soft: #2a3324;
+  --ok: #9fd3a5; --ok-bg: #1e3322; --warn: #e6bf7a; --warn-bg: #3a2e18; --no: #eba49c; --no-bg: #3d2220; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding: 40px 20px 80px; display: flex; flex-direction: column; gap: 36px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
+h2 { font-size: 1.45rem; }
+h3 { font-size: 1.12rem; }
+p { margin: 0; max-width: 68ch; }
+code, pre { font-family: var(--mono); font-size: .85em; }
+code { background: var(--sage-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 0; white-space: pre-wrap; }
+.eyebrow { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+header { display: flex; flex-direction: column; gap: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .95rem; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.pill { display: inline-block; font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.pass { background: var(--ok-bg); color: var(--ok); }
+.pill.warn { background: var(--warn-bg); color: var(--warn); }
+.pill.fail { background: var(--no-bg); color: var(--no); }
+.pill.not_run { background: var(--sage-soft); color: var(--muted); }
+
+.bluf { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--sage); border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; }
+.bluf p { font-size: 1.12rem; line-height: 1.5; }
+.anomaly-banner { background: var(--no-bg); border: 1px solid var(--no); color: var(--no); border-radius: 12px; padding: 18px 22px; display: flex; flex-direction: column; gap: 8px; }
+.anomaly-banner ul { margin: 0; padding-left: 1.2em; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.card.recommended { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: .95rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+
+.visual { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.visual img, .visual svg { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">{{Project}} · {{Stage}} · {{Date}}</span>
+  <h1>{{GateTitle}}</h1>
+  <div class="facts">
+    <span>Status: <span class="pill {{StatusClass}}">{{StatusLabel}}</span></span>
+    <span><b>{{CostEstimate}}</b> projected cost</span>
+    <span><b>{{RuntimeEstimate}}</b> projected runtime</span>
+    <span><b>{{LeakCount}}</b> engineering leaks</span>
+  </div>
+</header>
+
+<section class="bluf">
+  <span class="eyebrow">Bottom Line</span>
+  <p>{{Bluf}}</p>
+  <p style="font-size:.95rem;color:var(--muted);"><b>Recommendation:</b> {{Recommendation}}</p>
+</section>
+
+{{AnomalySection}}
+
+<section style="display:flex;flex-direction:column;gap:12px;">
+  <span class="eyebrow">Verification Ledger</span>
+  <h2>Automated Checks</h2>
+  <table>
+    <thead><tr><th>Check</th><th>Status</th><th>Detail</th></tr></thead>
+    <tbody>
+      {{ChecksRows}}
+    </tbody>
+  </table>
+</section>
+
+{{VisualSection}}
+
+{{ExcerptsSection}}
+
+<section style="display:flex;flex-direction:column;gap:12px;">
+  <span class="eyebrow">PI Decision</span>
+  <h2>Crux Options</h2>
+  <div class="grid">
+    {{CruxCards}}
+  </div>
+</section>
+
+</div>
+</body>
+</html>
