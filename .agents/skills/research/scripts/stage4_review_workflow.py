@@ -27,10 +27,29 @@ import json
 import subprocess
 from pathlib import Path
 
-workspace = Path(WORKSPACES[0]) if WORKSPACES else Path.cwd()
-skill_dir = Path(args.get("skill_dir") or Path(__file__).resolve().parent.parent)
+workspace = Path.cwd()
+
+
+def resolve_skill_dir() -> Path:
+    if args.get("skill_dir"):
+        return Path(args["skill_dir"]).expanduser().resolve()
+    if "__file__" in globals():
+        return Path(globals()["__file__"]).resolve().parent.parent
+    for candidate in (
+        workspace / ".agents/skills/research",
+        Path.home() / ".gemini/config/skills/research",
+        Path.home() / ".agents/skills/research",
+        Path.home() / ".claude/skills/research",
+    ):
+        if (candidate / "scripts/lint_manuscript.py").exists():
+            return candidate.resolve()
+    raise FileNotFoundError("Could not locate research skill directory; pass Args={'skill_dir': '...'}.")
+
+
+skill_dir = resolve_skill_dir()
 lint_script = skill_dir / "scripts" / "lint_manuscript.py"
 pilot_scan = skill_dir / "scripts" / "pilot_scan.py"
+agent_model = args.get("model") or "inherit"
 
 project = args.get("project", workspace.name)
 manuscript = args.get("manuscript", "notes/paper.md")
@@ -130,9 +149,15 @@ personas = [
 ]
 
 
+abs_manuscript = str((workspace / manuscript).resolve())
+abs_context = str((workspace / "CONTEXT.md").resolve())
+abs_results_globs = [str(workspace / g) if not Path(g).is_absolute() else g for g in results_globs]
+abs_code_paths = [str((workspace / p).resolve()) for p in code_paths]
+
+
 def make_persona_prompt(name: str, mandate: str, must_check_code: bool) -> str:
     code_req = (
-        f"MANDATORY: Spot-check the locked result files ({results_globs}) and scripts ({code_paths}) "
+        f"MANDATORY: Spot-check the locked result files ({abs_results_globs}) and scripts ({abs_code_paths}) "
         "to confirm numbers and logic before raising or dismissing a critique. Set verified_against_code=true only if you read code/data directly."
         if must_check_code
         else "Read the manuscript and CONTEXT.md directly; spot-check results/scripts if your critique depends on a number."
@@ -142,8 +167,8 @@ Mandate: {mandate}
 {code_req}
 
 Read:
-- Manuscript: {manuscript}
-- Context: CONTEXT.md (if present)
+- Manuscript: {abs_manuscript}
+- Context: {abs_context} (if present)
 - Linter summary: words={lint_report['word_count']}/{lint_report.get('max_words')}, errors={lint_report['errors']}, warnings={lint_report['warnings']}
 
 Do NOT write or edit any files. Return a concise, argued JSON verdict via `finish`."""
@@ -151,7 +176,13 @@ Do NOT write or edit any files. Return a concise, argued JSON verdict via `finis
 
 panel_results = await parallel(
     personas,
-    lambda p: agent(make_persona_prompt(p[0], p[1], p[2]), schema=persona_schema, role=f"/lab {p[0]}", type_name="self"),
+    lambda p: agent(
+        make_persona_prompt(p[0], p[1], p[2]),
+        schema=persona_schema,
+        role=f"/lab {p[0]}",
+        type_name="self",
+        model=agent_model,
+    ),
 )
 
 # ── Phase 3: Fresh Lead Synthesizer separates auto-fixes from PI cruxes ─────
@@ -196,7 +227,7 @@ Produce a crisp synthesis:
 
 Do NOT edit files. Return strict JSON via `finish`."""
 
-synthesis = await agent(synth_prompt, schema=synth_schema, role="Lead Gate 4 Synthesizer", type_name="self")
+synthesis = await agent(synth_prompt, schema=synth_schema, role="Lead Gate 4 Synthesizer", type_name="self", model=agent_model)
 
 # ── Phase 4: Emit Gate 4 Decision Card ──────────────────────────────────────
 phase("4. Emit Gate 4 Decision Card")

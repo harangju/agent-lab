@@ -24,9 +24,28 @@ import subprocess
 import time
 from pathlib import Path
 
-workspace = Path(WORKSPACES[0]) if WORKSPACES else Path.cwd()
-skill_dir = Path(args.get("skill_dir") or Path(__file__).resolve().parent.parent)
+workspace = Path.cwd()
+
+
+def resolve_skill_dir() -> Path:
+    if args.get("skill_dir"):
+        return Path(args["skill_dir"]).expanduser().resolve()
+    if "__file__" in globals():
+        return Path(globals()["__file__"]).resolve().parent.parent
+    for candidate in (
+        workspace / ".agents/skills/research",
+        Path.home() / ".gemini/config/skills/research",
+        Path.home() / ".agents/skills/research",
+        Path.home() / ".claude/skills/research",
+    ):
+        if (candidate / "scripts/pilot_scan.py").exists():
+            return candidate.resolve()
+    raise FileNotFoundError("Could not locate research skill directory; pass Args={'skill_dir': '...'}.")
+
+
+skill_dir = resolve_skill_dir()
 pilot_scan = skill_dir / "scripts" / "pilot_scan.py"
+agent_model = args.get("model") or "inherit"
 
 project = args.get("project", workspace.name)
 hypothesis = args.get("hypothesis", "No hypothesis specified.")
@@ -78,7 +97,7 @@ inspector_schema = {
     "properties": {
         "engineering_leaks_found": {"type": "integer"},
         "leaks": {"type": "array", "items": {"type": "string"}},
-        "behavior_summary": {"type": "string"},
+        "behavior_summary": {"type": "string", "description": "At most 2 short plain sentences."},
         "trajectory_quality": {"type": "string", "enum": ["clean", "minor_issues", "broken"]},
     },
 }
@@ -94,9 +113,11 @@ auditor_schema = {
     },
 }
 
+abs_scanned_files = [str((workspace / f).resolve()) for f in scan_report["files_scanned"]]
+
 inspector_prompt = f"""You are a Trajectory Inspector auditing a 1-seed pilot for project '{project}'.
 Read the actual raw pilot files listed below—never rely on summaries alone.
-Files: {scan_report['files_scanned']}
+Files: {abs_scanned_files}
 Deterministic scan summary: {json.dumps({k: scan_report[k] for k in ['leak_count', 'leaks', 'total_records']}, indent=2)}
 
 Inspect raw transcripts/records directly for:
@@ -110,7 +131,7 @@ auditor_prompt = f"""You are an Anomaly Auditor evaluating a 1-seed pilot for pr
 Working hypothesis: {hypothesis}
 Deterministic metric summary: {json.dumps(scan_report['metric_summary'], indent=2)}
 Ceiling/floor flags: {json.dumps(scan_report['ceiling_floor_flags'], indent=2)}
-Files to spot-check: {scan_report['files_scanned']}
+Files to spot-check: {abs_scanned_files}
 
 Check whether the pilot signal is valid or whether an Anomaly Circuit-Breaker should fire.
 Fire `circuit_breaker_triggered: true` if:
@@ -127,7 +148,7 @@ insp_result, audit_result = await parallel(
         ("Trajectory Inspector", inspector_prompt, inspector_schema),
         ("Anomaly Auditor", auditor_prompt, auditor_schema),
     ],
-    lambda item: agent(item[1], schema=item[2], role=item[0], type_name="self"),
+    lambda item: agent(item[1], schema=item[2], role=item[0], type_name="self", model=agent_model),
 )
 
 # ── Phase 3: Assemble Gate 3 payload & render HTML card ─────────────────────
