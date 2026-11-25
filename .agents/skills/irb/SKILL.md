@@ -64,7 +64,7 @@ Use when the study design, `experiment.yaml`, or workspace code changed.
 1. Run `python3 <skill-dir>/scripts/audit_packet.py --irb <irb-dir> --code <experiment-dir>`.
 2. Classify each difference against [references/amendment-proofing.md](references/amendment-proofing.md):
    - **In-envelope**: calibration or UI polish already covered by the protocol's stated bounds (no IRB change needed; note why).
-   - **Pre-submission sync**: study not yet submitted — update all four synchronized surfaces (application `.md`, consent, recruitment/tasks, live experiment), rebuild `.docx`, and re-audit.
+   - **Pre-submission sync**: study not yet submitted — if the draft and code conflict on boundary choices (duration/pay tier, task scope, consent format, survey pool, or `N`), pause and run the short PI decision gate from Section 1 before editing; then update all four synchronized surfaces (application `.md`, consent, recruitment/tasks, live experiment), rebuild `.docx`, and re-audit.
    - **Amendment required**: study is already approved/acknowledged and the change crosses an approved boundary (higher risk, new data/telemetry, higher `N`, lower hourly rate, deception, new population, materially different task). Flag explicitly and draft an amendment summary instead of silently altering approved text.
 
 ## 3. Revise for an IRB review round (`revise`)
