@@ -8,7 +8,7 @@ Lead is the main Claude session. The other personas run as parallel [subagents](
 
 ## Install
 
-The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, `/research`, and the `/referee` checkers work best with subagents. Three more sit alongside the lab: `/research` orchestrates a full stage-gated research loop from a starting question to a verified manuscript, `/fan-out` schedules a batch of independent work, and `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
+The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, `/research`, `/referee`, and `/irb` checkers work best with subagents. Four more sit alongside the lab: `/research` orchestrates a full stage-gated research loop from a starting question to a verified manuscript, `/fan-out` schedules a batch of independent work, `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice, and `/irb` drafts, audits, and synchronizes Exempt online human-subjects IRB packets with experiment code. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
 
 Quickest: in Claude Code, say
 
@@ -21,7 +21,7 @@ Manual install. To get updates with `git pull`, clone the repo and symlink the s
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
 mkdir -p ~/.agents/skills ~/.claude/skills
-for s in lab draft save fan-out referee research; do
+for s in lab draft save fan-out referee research irb; do
   ln -s ~/agent-lab/.agents/skills/$s ~/.agents/skills/$s   # cross-client location
   ln -s ~/agent-lab/.agents/skills/$s ~/.claude/skills/$s   # Claude Code
 done
@@ -51,6 +51,7 @@ The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab`
 | `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose standing rules when your feedback keeps recurring. |
 | `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
 | `/research [question or resume]` | Run a six-stage research loop from a starting question to a verified manuscript, composing `/lab`, `/draft`, `/save`, and `/fan-out` with automated 1-seed pilots, raw-log inspection, style/provenance linting, and five PI decision gates. |
+| `/irb [draft \| sync \| revise \| stamp \| closeout] [path]` | Draft, sync, revise, stamp, or closeout Exempt online IRB packets (application draft, `.docx` consent/recruitment/task attachments, and live experiment code/config) with amendment-proof bounds and fresh-context sync/compliance checks. Keeps PI details in a local untracked profile (`~/.config/agent-lab/irb-profile.md`). |
 
 Examples:
 
@@ -163,6 +164,10 @@ A research lesson or decision specific to one project goes in that project's `CO
     ├── template.html            # PI gate decision card
     ├── references/              # gates.md (schemas + S-tier checks), scaffold.md, revision.md
     └── scripts/                 # lint_manuscript.py, pilot_scan.py, pilot_workflow.py, stage4_review_workflow.py, checkpoint.py
+└── irb/
+    ├── SKILL.md                 # Exempt IRB workflow (draft, sync, revise, stamp, closeout)
+    ├── references/              # institutions/jhu-hirb.md, consent-formats.md, amendment-proofing.md, checkers.md, profile.example.md
+    └── scripts/                 # build_docx.py (Markdown → .docx), audit_packet.py (code/IRB sync & compliance audit)
 ```
 
 In each project, `/save` creates:
