@@ -1,4 +1,4 @@
-# Agent Lab
+# Lab of Agents
 
 A team of AI scientist colleagues: not assistants who execute, but peers who think, argue, and push back. Each has distinct values and taste. The value is in the dialectic.
 
