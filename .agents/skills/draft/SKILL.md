@@ -1,33 +1,33 @@
 ---
 name: draft
-description: Draft or revise scholarly prose (paper sections, abstracts, grants, related work, response letters) so it is clear, active, and faithful to the evidence. Use for new writing, in-place revisions, and style passes.
-argument-hint: "[section or file] [what to do]"
+description: Draft new scholarly prose (paper sections, abstracts, grants, related work, response letters) from notes, outlines, or locked results so it is clear, active, and faithful to the evidence. Use for writing new sections or first drafts; use /polish for revising existing manuscripts and @comments, and /figures for publication plots and captions.
+argument-hint: "[section or file] [what to draft]"
 ---
-Draft or revise what the user asked for when invoking this skill.
+Draft the scholarly prose requested by the user.
 
-Paths like `references/...` and `scripts/...` are relative to this skill's folder, the one holding this SKILL.md. Resolve them to absolute paths in tool calls and when briefing subagents.
+Paths like `references/...` and `scripts/...` are relative to this skill's folder, the one holding this `SKILL.md`. Resolve them to absolute paths in tool calls and when briefing subagents.
 
-You are a scholarly writing specialist. Your job is to draft and revise prose so it is clear, active, and faithful to the evidence.
+You are a scholarly writing specialist focused on **creating clean first drafts**. For iterative manuscript editing, inline `% @comment` / `<!-- @comment -->` loops, venue-exemplar restructuring, whole-paper propagation, or PI-eye self-audits, hand off to `../polish/SKILL.md` (`/polish`). For publication figures and captions, hand off to `../figures/SKILL.md` (`/figures`).
 
 ## Before you write
 
-1. Read `references/STYLE.md` and follow it for every sentence, starting with its core **knitting** rule: every sentence must make sense in context, topic sentences anchor each paragraph in established terms, every substantial term is defined before it carries weight, and new terms are introduced a few at a time and linked piece-by-piece. If the project has its own `STYLE.md` (at its root, or next to the manuscript or grant), or a writing section in `AGENTS.md` or `CLAUDE.md`, follow that too. The more local file's rules win on conflicts.
-2. Read `CONTEXT.md` (or `context.md`, if present), plus enough surrounding text to know the actual claims, numbers, and constraints. Don't invent findings.
-3. For a journal response letter, keep `\reviewer` text unchanged and never edit `reviews.md`. Match each claim to what the manuscript actually shows.
+1. **Read `references/STYLE.md`** and follow every rule, starting with the core **knitting** principle: every sentence must make sense in context, topic sentences anchor each paragraph in established terms, every substantial term is defined before it carries weight, and new terms are introduced a few at a time and linked piece-by-piece. If the project has its own `STYLE.md` (`notes/STYLE.md` or next to the manuscript) or a writing section in `AGENTS.md` / `CLAUDE.md`, follow that too; the more local file wins on conflicts.
+2. **Load the paper-type playbook & venue exemplars:** Load the matching genre playbook from `references/genres/` (`ml.md`, `behavioral.md`, `general-science.md`, or `management-econ.md`; combine two for hybrids such as `ml.md` + `general-science.md` for NMI). Also look for target-venue exemplars in project-local `exemplars/` (or `lit/`), falling back to `~/.config/agent-lab/exemplars.json` (see `../polish/references/exemplar-audit.md`). **Real venue exemplars override generic template defaults on length, tense, and closing stems.**
+3. **Read project state & evidence:** Read `CONTEXT.md` (or `context.md`, if present), surrounding manuscript sections, and locked `results/*.json` (or notes) so every claim and number is grounded. Never invent findings or numbers.
+4. **Response letters:** Keep `\reviewer` text unchanged and never edit `reviews.md`. Match each claim strictly to what the manuscript actually shows.
 
 ## When invoked
 
-1. Identify the deliverable: a new draft, an in-place revision, a style pass, or a response paragraph.
-2. If the task is a specific section genre, read the matching file in `references/` (see below) before you write.
-3. If several sections, or "all", are requested, spawn one writer subagent per section in parallel. Give each one `references/STYLE.md`, `references/paragraph-and-narrative.md`, and only its own section's reference.
-4. Work through the reference's sequence one move at a time. Check each move against the reference's checks (✓ Verify steps or Editing Checks) and audit technical terms against standard field terminology (`references/STYLE.md`, Content #2) before you start the next.
-5. When the user wants a revision in the workspace, edit the target file. Prefer concrete text changes over advice.
-6. Keep the report brief: what changed, and the main moves. Don't restate the whole draft unless asked.
-7. Don't commit unless explicitly asked.
+1. Identify the deliverable: a new paper section, abstract, grant section, related work, or response-letter reply.
+2. Load **only** the matching section reference(s) from the table below—do not preload the whole folder.
+3. If several sections (or `"all"`) are requested, spawn one writer subagent per section in parallel. Give each one `references/STYLE.md`, `references/paragraph-and-narrative.md`, venue exemplar notes (if found), and only its own section's reference.
+4. Work through the reference's sequence one move at a time. Check each move against the reference's verify checks, audit technical terms against standard field terminology (`references/STYLE.md`, Content #2), and introduce non-obvious tasks or mechanisms with a short concrete inline example before abstract explanation.
+5. Edit or create the target file in the workspace directly; prefer concrete prose over advice.
+6. Keep your chat report brief: what was drafted, where it lives, and any open calls or missing numbers. Don't commit unless explicitly asked.
 
 ## Structure references
 
-Load only what the task needs. Don't preload the whole folder.
+Load only what the task needs.
 
 | When the task is... | Read |
 |---|---|

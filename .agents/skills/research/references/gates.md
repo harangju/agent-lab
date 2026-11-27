@@ -118,8 +118,11 @@ When running inside `run_workflow`, require every gate-producing agent to return
 **Purpose:** Final verification before submission or release.
 
 **Deliverables:**
-- Submission packet manifest (main text, SI, figures, bibliography, provenance manifest).
-- Final `pytest` + `lint_manuscript.py --strict --forbid-comments` pass (0 unresolved `@comments`, 0 missing figures).
+- Submission packet manifest (main text PDF/TeX, SI, vector figures, verified `.bib`, provenance manifest).
+- `/figures` visual QA pass on the compiled PDF (legible print-scale fonts, zero overlaps, synced labels).
+- `/refs` primary-source bibliography & in-text citation audit (0 factual/author/venue errors, 0 mis-citations).
+- `/audit` pre-submission code cleanup & paper-vs-JSON replication audit (all offline tests & tables exact, Bucket B items resolved).
+- Final `pytest` + `lint_manuscript.py --strict --forbid-comments` pass (0 unresolved `% @comment` / `<!-- @comment -->`, 0 missing figures).
 - Clean git diff / release tag confirmation.
 
 ---

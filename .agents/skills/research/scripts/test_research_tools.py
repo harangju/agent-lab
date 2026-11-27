@@ -273,5 +273,64 @@ class TestCheckpoint(unittest.TestCase):
             self.assertIn("- Prompt v1 leaks JSON", ctx_text2)
 
 
+class TestLatexLinting(unittest.TestCase):
+    def test_modular_latex_clean_and_catches_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / "sections").mkdir()
+            (root / "figs").mkdir()
+            (root / "figs" / "fig1.pdf").write_bytes(b"%PDF-1.4\n")
+            res = root / "results.json"
+            res.write_text(json.dumps({"acc": 0.842, "delta": 14.5}), encoding="utf-8")
+            bib = root / "ref.bib"
+            bib.write_text("@article{smith2024,\n  title={Test},\n  author={Smith}\n}\n", encoding="utf-8")
+
+            (root / "sections" / "intro.tex").write_text(
+                "\\section{Introduction}\n"
+                "Models reach 84.2\\% accuracy across 8B--675B scales \\citep{smith2024}.\n"
+                "\\begin{figure}[t]\n"
+                "\\includegraphics{fig1}\n"
+                "\\end{figure}\n"
+                "\\begin{table}[t]\n"
+                "\\begin{tabular}{cc} 99999 & ignored \\\\ \\end{tabular}\n"
+                "\\end{table}\n",
+                encoding="utf-8",
+            )
+            main_tex = root / "main.tex"
+            main_tex.write_text(
+                "\\documentclass{article}\n"
+                "\\graphicspath{{figs/}}\n"
+                "\\begin{document}\n"
+                "\\input{sections/intro}\n"
+                "\\bibliography{ref}\n"
+                "\\end{document}\n",
+                encoding="utf-8",
+            )
+
+            clean = lint_manuscript.lint_manuscript(
+                main_tex, bib_path=bib, result_paths=[res], strict=True, forbid_comments=True
+            )
+            self.assertTrue(clean["passed"], msg=json.dumps(clean, indent=2))
+            self.assertEqual(clean["unresolved_comments"], 0)
+            self.assertEqual(clean["numbers_matched"], 1)
+
+            # Inject LaTeX em-dash, % @comment, and missing figure
+            (root / "sections" / "intro.tex").write_text(
+                "\\section{Introduction}\n"
+                "Models fail---badly---here \\citep{smith2024}. % @comment (fix em dash)\n"
+                "\\includegraphics{missing_fig}\n",
+                encoding="utf-8",
+            )
+            dirty = lint_manuscript.lint_manuscript(
+                main_tex, bib_path=bib, forbid_comments=True
+            )
+            rules = {f["rule"] for f in dirty["findings"]}
+            self.assertFalse(dirty["passed"])
+            self.assertIn("em-dash", rules)
+            self.assertIn("unresolved-comment", rules)
+            self.assertIn("missing-figure", rules)
+            self.assertEqual(dirty["unresolved_comments"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()

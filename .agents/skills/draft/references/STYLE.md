@@ -18,11 +18,13 @@ Every sentence must make sense inside its immediate context. Do not drop jargon,
      - ❌ "Bolting agents onto old processes rarely delivers."
      - ✅ "It rarely delivers to bolt agents onto old processes."
    - Also avoid opening a sentence with a participle used as an adjective ("Communicating agents can deviate..."). It is syntactically ambiguous, because the reader first parses it as a heavy gerund subject ("the act of communicating with agents").
-3. **Use an active, concrete verb.** Don't use the passive where an action verb will do. Match the verb to what actually happened. Prefer simple standard verbs that do real work ("test", "measure", "compare", "build", "map", "show", "keep") over ornate or vague ones ("leverage", "illuminate", "operationalize", "facilitate", "interrogate").
-4. **Narrate when appropriate.** When the prose walks the reader through a move (a definition, a test, a turn in the argument), say what you are doing, in plain sequence. Narration orients the reader. It doesn't decorate.
-5. **Don't use a verb that doubles as a noun.** Noun-verb ambiguity confuses. Avoid "partitions", "splits", "breaks", "cuts", and "spreads"; prefer "decomposes", "severs", or "computes". But don't swap simple verbs for stiff, thesaurus words ("elevate" for "raise", "ceases" for "stops") unless the result sounds completely natural. Simple, clear verbs always win.
-6. **Be standard, not corny.** No cute, dramatic, or ornamental word choices. No inflated phrasing ("synergistic", "revolutionary").
-7. **Vary sentence length.** A key finding deserves a short sentence of its own. After a long, complex sentence, follow with a short one. LLMs default to uniform medium-length sentences, so break the pattern on purpose.
+3. **Use an active, concrete verb.** Don't use the passive where an action verb will do. Match the verb to what actually happened. Prefer simple standard verbs that do real work ("test", "measure", "compare", "build", "map", "show", "improve", "reduce") over ornate, vague, or colloquial ones ("leverage", "illuminate", "operationalize", "facilitate", "interrogate", "unlock", "impact").
+4. **Signal contrasts clearly.** When a sentence hinges on a contrast, consider opening with "While" or "Although" so the reader anticipates the turn early, rather than surprising them mid-sentence—while still varying sentence openings so prose never turns mechanical.
+5. **Narrate when appropriate.** When the prose walks the reader through a move (a definition, a test, a turn in the argument), say what you are doing, in plain sequence. Narration orients the reader. It doesn't decorate.
+6. **Don't use a verb that doubles as a noun.** Noun-verb ambiguity confuses. Avoid "partitions", "splits", "breaks", "cuts", and "spreads"; prefer "decomposes", "severs", or "computes". But don't swap simple verbs for stiff, thesaurus words ("elevate" for "raise", "ceases" for "stops") unless the result sounds completely natural. Simple, clear verbs always win.
+7. **Be standard, not corny.** No cute, dramatic, or ornamental word choices. No inflated phrasing ("synergistic", "revolutionary").
+8. **Vary sentence length.** A key finding deserves a short sentence of its own. After a long, complex sentence, follow with a short one. LLMs default to uniform medium-length sentences, so break the pattern on purpose.
+9. **Keep tense consistent with target-venue exemplars.** Match the target venue's tense norm within each section rather than drifting between past and present tense. (For paper-type micro-rules and concrete examples, load the matching playbook in `genres/`.)
 
 ## Punctuation
 
@@ -38,10 +40,12 @@ Every sentence must make sense inside its immediate context. Do not drop jargon,
 4. **De-hedge.** State the claim. Keep substantive caveats that narrow a factual claim, and cut meta-qualifiers that label the contribution as narrow. The test is whether a qualifier narrows the fact or the framing of the fact: a qualifier that narrows the fact stays, and one that narrows the framing goes. Qualify without announcing that you are qualifying.
 5. **Never frontload limitations.**
 6. **Frame the design with confidence, not defensively.** Keep 100% scientific accuracy and respect the boundaries of the experiments, but present design choices as strong and deliberate. Sound like you are confidently explaining a strong design, not defending a weak one.
-7. **Be specific.** In Results, use exact numbers and anchor comparisons: "reduced error by 12% (from 34% to 22%)", not "significantly reduced error". Don't write "the model" when you mean BERT, or "in most cases" when you have the count.
-8. **In journal revisions, never refer to the reviewer or editor in the manuscript.**
-9. **Name a contrast with concrete opposites.** When a sentence turns on a reversal or tension, name both poles in concrete terms ("an asset in human-human teams, a liability in human-AI teams") instead of a vague motion verb ("accelerating", "shifting", "widening"). Give the consequence its own sentence so the claim lands.
-10. **Make topic sentences skimmable.** A reader who scans only the first sentence of each paragraph should still get the argument. Frame the topic sentence in established terms and name the subject up front before bringing in concrete examples or new sub-concepts. Don't open a paragraph with a cold narrow example or a backward demonstrative ("This finding...", "These results...") that sends the reader back to the previous paragraph to work out what it means. Anywhere in a paragraph, attach a noun to "this" ("this result shows", not "this shows").
+7. **Be specific, but keep prose on a number and parenthetical diet.** Anchor comparisons with 1–2 headline numbers ("reduced error from 34% to 22%", not "significantly reduced error"), and name specific models, populations, or settings rather than vague placeholders. Do not cram stacked parentheticals or dense inline uncertainty dumps into narrative prose; let tables and figure captions carry full breakdowns.
+8. **No undefined bare symbols or cryptic shorthand.** Never drop internal variable names, raw code identifiers, or opaque column abbreviations into prose, titles, or captions. Spell out concepts in plain English or define symbols inline on first use.
+9. **Lead non-obvious setups with a concrete inline example.** Before explaining an unfamiliar task, treatment, or mechanism in abstract terms, ground it in a 1–2 line concrete example so the reader immediately sees what is happening.
+10. **In journal revisions, never refer to the reviewer or editor in the manuscript.**
+11. **Name a contrast with concrete opposites.** When a sentence turns on a reversal or tension, name both poles in concrete terms ("an asset in human-human teams, a liability in human-AI teams") instead of a vague motion verb ("accelerating", "shifting", "widening"). Give the consequence its own sentence so the claim lands.
+12. **Make topic sentences skimmable.** A reader who scans only the first sentence of each paragraph should still get the argument. Frame the topic sentence in established terms and name the subject up front before bringing in concrete examples or new sub-concepts. Don't open a paragraph with a cold narrow example or a backward demonstrative ("This finding...", "These results...") that sends the reader back to the previous paragraph to work out what it means. Anywhere in a paragraph, attach a noun to "this" ("this result shows", not "this shows").
 
 ## Grammar
 
@@ -69,8 +73,8 @@ Every sentence must make sense inside its immediate context. Do not drop jargon,
 Match the PI's voice. Use these stems as models, but internalize the patterns rather than repeating them verbatim.
 
 - **Reporting findings:** "We found that...", "These results suggest/indicate/demonstrate that...", "This pattern aligns with..."
-- **Transitions:**
-  - "Taken together, ..." synthesizes several findings into one claim.
+- **Transitions (check against target-venue exemplars before using formulaic closers):**
+  - "Taken together, ..." synthesizes several findings into one claim (use inside Results synthesis, not as a rote Introduction closer if target-venue exemplars avoid it).
   - "Having established X, we now examine Y" bridges two sections.
   - "We begin by examining..." opens a Results section.
   - "Most importantly, ..." marks the argument's center of gravity.

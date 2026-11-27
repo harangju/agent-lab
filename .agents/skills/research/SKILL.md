@@ -28,8 +28,13 @@ Before acting:
 2. Load only the reference file needed for the current stage:
    - Gate schemas, S-tier cargo checks, and decision memos: `references/gates.md`
    - Project scaffolding (Stage 0 → Gate 1): `references/scaffold.md`
-   - Writing rules (Stage 4–5): `../draft/SKILL.md` and `../draft/references/STYLE.md` (plus project `notes/STYLE.md` if present; project rules win on conflicts).
-   - Post-submission revisions (Stage 6 / R&R): `references/revision.md` and `../draft/references/response-letter-structure.md`.
+3. **Writing, polish, figures, refs & audit (Stage 4–5):**
+   - First drafts: `../draft/SKILL.md` + `../draft/references/STYLE.md` (project `notes/STYLE.md` wins on conflicts).
+   - Editing, `% @comment` / `review_comments.jsonl`, exemplar alignment & propagation: `../polish/SKILL.md`.
+   - Publication figures & rendered-PDF visual QA: `../figures/SKILL.md`.
+   - Primary-source bibliography & citation audit: `../refs/SKILL.md`.
+   - Pre-submission code cleanup & paper-vs-JSON replication audit: `../audit/SKILL.md`.
+4. **Post-submission revisions (Stage 6 / R&R):** `references/revision.md` and `../draft/references/response-letter-structure.md`.
 
 ## The Stages and Gates
 
@@ -84,28 +89,32 @@ Run only after Gate 3 approval.
 5. **Anomaly check:** Compare full-sweep results against pilot expectations and hypotheses. If a major anomaly or reversal appears, fire the **Anomaly Circuit-Breaker** and wake the PI before drafting.
 6. Auto-checkpoint (`scripts/checkpoint.py`). If clean and anomaly-free, auto-advance to Stage 4.
 
-### Stage 4 — Draft, Lint & Internal Audit
+### Stage 4 — Draft, Figures, Polish & `/lab` Audit
 
-1. **Draft:** Follow `../draft/SKILL.md` (loading `STYLE.md` + project `notes/STYLE.md` + only the needed section templates). Match structural proportions and word caps against `lit/` venue exemplars. Pull every number strictly from locked `results/*.json`.
-2. **Lint, Provenance & Code-Verified `/lab review`:**
+1. **Draft:** Follow `../draft/SKILL.md` (loading `STYLE.md`, project `notes/STYLE.md`, venue exemplars, and only the needed section templates). Pull every number strictly from locked `results/*.json`.
+2. **Figures & Visual QA:** Follow `../figures/SKILL.md` to generate publication figures, recompile the PDF, and inspect every rendered figure page for print-scale legibility, overlaps, and label parity.
+3. **Polish & Exemplar Pass:** Follow `../polish/SKILL.md` to align abstract/intro/headings/tables against venue exemplars, standardize field terminology, and sync terms across prose, figures, and captions.
+4. **Lint, Provenance & Code-Verified `/lab review`:**
    - When `run_workflow` is available, run `<skill-dir>/scripts/stage4_review_workflow.py` (runs `lint_manuscript.py` + `pytest`, fans out all five `/lab` personas in parallel with mandatory code/data verification for Methodologist & Skeptic, synthesizes verifiable fixes vs. PI cruxes, and renders the Gate 4 HTML card).
-   - Otherwise, run `lint_manuscript.py` directly:
+   - Otherwise, run `lint_manuscript.py` directly (works on both `.tex` with `\input` and `.md`):
      ```bash
-     python3 <skill-dir>/scripts/lint_manuscript.py notes/paper.md \
-       --results results/*.json --max-words <venue_cap> --check-md-refs --format text
+     python3 <skill-dir>/scripts/lint_manuscript.py paper/main.tex \
+       --bib paper/ref.bib --results results/*.json --max-words <venue_cap> --format text
      ```
      Fix style, citation, missing-figure, word-count, and unverified-number errors, then convene `/lab review` with paths to `results/*.json` and analysis scripts.
-3. **One verifiable self-fix round:** Fix every objectively verifiable bug, overclaim, or clarity gap that `/lab` confirmed against code/data. Re-run `lint_manuscript.py` and `pytest`. Do **not** resolve high-stakes framing or scope contradictions silently—surface those as PI crux calls.
-4. Auto-checkpoint (`scripts/checkpoint.py`).
-5. **Gate 4 (PI Craft Pass):** Hand over the clean manuscript plus a rendered Gate 4 review card (`template.html`, or `/fan-out` review page for multi-part edits) showing word count vs. cap, linter & provenance status, key visuals, `/lab` cruxes, and open calls. Wait for PI inline comments and steering.
+5. **One verifiable self-fix round:** Fix every objectively verifiable bug, overclaim, or clarity gap that `/lab` confirmed against code/data. Re-run `lint_manuscript.py` and `pytest`. Do **not** resolve high-stakes framing or scope contradictions silently—surface those as PI crux calls.
+6. Auto-checkpoint (`scripts/checkpoint.py`).
+7. **Gate 4 (PI Craft Pass):** Hand over the clean manuscript plus a rendered Gate 4 review card (`template.html`, or `/fan-out` review page for multi-part edits) showing word count vs. cap, linter & provenance status, key visuals, `/lab` cruxes, and open calls. Wait for PI inline comments and steering.
 
-### Stage 5 — Polish & Package
+### Stage 5 — Polish, Verify & Package
 
-1. Re-read the manuscript before every edit (the PI may edit directly or leave inline `<!-- @comment -->` notes). Preserve the PI's wording and edits verbatim unless asked to change them.
-2. Apply every PI comment cleanly; re-run figure/table scripts if any empirical claim moved, and visually inspect rendered publication figures.
-3. Run the final verification gate: `pytest`, `lint_manuscript.py --strict --forbid-comments` (ensures zero unresolved `@comments`, zero missing figures, clean style, verified citations and numbers), and provenance manifest check.
-4. Assemble the submission packet (main text, SI, figures, references, provenance manifest) and auto-checkpoint.
-5. **Gate 5 (Submit):** Present the final checklist and wait for PI sign-off.
+1. **PI Review-Comment Loop (`/polish`):** Re-read the manuscript before every edit, resolve every `% @comment (...)` or `<!-- @comment -->` annotation and chat edit, log each item to `notes/review_comments.jsonl` before stripping comment tags, propagate renames across prose/figures/tables, and run a fresh PI-eye self-audit.
+2. **Visual QA (`/figures`):** If any figure or table moved, regenerate from scripts, recompile the PDF, and inspect rendered pages with `render_pdf_pages.py` + `read_file`.
+3. **Primary-Source Reference Audit (`/refs`):** Verify every `.bib` entry and in-text citation context against arXiv, Crossref, OpenAlex, and official proceedings; confirm zero undefined citations or cross-reference warnings on recompile.
+4. **Code, Cleanup & Replication Audit (`/audit`):** Run the 4-track parallel audit to prune dead scripts/SLURM bloat, verify byte-for-byte / value-for-value offline replication of every figure, table, and manuscript number, and surface any scientific findings for PI sign-off.
+5. **Final verification gate:** Run `pytest`, `lint_manuscript.py --strict --forbid-comments`, and clean PDF compilation (`tectonic` / `pdflatex`).
+6. Assemble the submission packet (main text, SI, figures, verified bibliography, provenance manifest) and auto-checkpoint.
+7. **Gate 5 (Submit):** Present the final checklist and wait for PI sign-off.
 
 ### Stage 6 — Revise & Resubmit (Post-Review R&R)
 

@@ -38,9 +38,10 @@ Add the new log file to a "Session logs" list at the bottom (create the list if 
 
 ## 3. Propose standing rules (don't write them)
 
-Skim earlier files in `log/`. If this session's PI feedback repeats a pattern that already appears in earlier logs (roughly 3 or more times in total), propose it to the PI in your reply and route it to the file that governs that behavior:
+Skim earlier files in `log/` and (if present) `notes/review_comments.jsonl`. If this session's PI feedback or logged manuscript edits repeat a pattern that already appears in earlier logs or review comments (roughly 3 or more times in total), propose it to the PI in your reply and route it to the file that governs that behavior:
 - **Agent workflow, coding, or communication style** — the project's `AGENTS.md` / `CLAUDE.md` (or user-level agent rules if cross-project)
 - **Prose, voice, or formatting rules** — the project's `STYLE.md` (or `../draft/references/STYLE.md` if cross-project)
+- **Editorial, title, heading, table, or figure craft rules** — `../polish/references/` or `../figures/references/` if cross-project
 - **`/lab` deliberation norms** (only for `/lab` behavior) — `../lab/references/norms.md`
 - **`/lab` persona calibration** — `../lab/references/personas.md`
 

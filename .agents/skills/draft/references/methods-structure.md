@@ -16,4 +16,4 @@ Organized by technique or system, not chronologically.
 **Move 4: Statistics.** Give tests, thresholds, corrections, sample sizes
 - ✓ Verify: Are multiple comparison corrections stated? Is the significance threshold explicit?
 
-Write in past tense. If adapting a prior method, cite the original and describe your modifications.
+Use past tense for completed empirical procedures, or consistent present tense for formal definitions and ML experimental setups when target-venue exemplars do so. If adapting a prior method, cite the original and describe your modifications.

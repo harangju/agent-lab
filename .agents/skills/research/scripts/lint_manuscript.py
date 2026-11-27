@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Manuscript style, citation, and number-provenance linter.
 
-Zero-dependency Python 3 CLI designed for scholarly markdown manuscripts.
+Zero-dependency Python 3 CLI designed for scholarly Markdown and LaTeX manuscripts.
 Checks prose against agent-lab STYLE.md defaults (plus optional project config),
-enforces venue word caps, validates citations, and cross-checks numeric claims
-against locked results/*.json files.
+enforces venue word caps, validates citations, detects unresolved @comments,
+checks embedded figure paths, and cross-checks numeric claims against locked
+results/*.json files.
 
 Usage:
     python3 lint_manuscript.py notes/paper.md
-    python3 lint_manuscript.py notes/paper.md --max-words 4500 --results results/*.json
+    python3 lint_manuscript.py paper/main.tex --bib paper/ref.bib --results results/*.json
     python3 lint_manuscript.py notes/paper.md --config notes/lint.json --bib lit/refs.bib --format json
 """
 
@@ -196,16 +197,178 @@ def strip_non_prose_preserve_lines(text: str) -> tuple[list[str], int | None]:
     return out, refs_line
 
 
-def clean_inline_markup(line: str) -> str:
-    """Strip inline code, inline math, URLs, and markdown links for prose checks."""
+LATEX_SKIP_ENVS: set[str] = {
+    "equation",
+    "equation*",
+    "align",
+    "align*",
+    "gather",
+    "gather*",
+    "multline",
+    "multline*",
+    "eqnarray",
+    "eqnarray*",
+    "table",
+    "table*",
+    "tabular",
+    "tabular*",
+    "tabularx",
+    "tikzpicture",
+    "verbatim",
+    "lstlisting",
+    "minted",
+    "algorithm",
+    "algorithmic",
+    "thebibliography",
+}
+
+LATEX_HEADING_RE = re.compile(r"^\\(?:part|chapter|section|subsection|subsubsection)\*?\{")
+
+
+def expand_latex_inputs(manuscript_path: Path, seen: set[Path] | None = None, root_dir: Path | None = None) -> str:
+    """Recursively expand \\input{...} and \\include{...} in a LaTeX manuscript."""
+    resolved = manuscript_path.resolve()
+    if seen is None:
+        seen = set()
+    if root_dir is None:
+        root_dir = resolved.parent
+    if resolved in seen or not resolved.exists():
+        return ""
+    seen.add(resolved)
+    text = resolved.read_text(encoding="utf-8", errors="replace")
+    cur_dir = resolved.parent
+    out_lines: list[str] = []
+
+    for line in text.splitlines():
+        if line.lstrip().startswith("%"):
+            out_lines.append(line)
+            continue
+        m = re.match(r"^\s*\\(?:input|include)\{([^}]+)\}\s*(?:%.*)?$", line)
+        if m:
+            rel = m.group(1).strip()
+            candidates = []
+            for base in (cur_dir, root_dir):
+                candidates.append(base / rel)
+                if not rel.endswith(".tex"):
+                    candidates.append(base / f"{rel}.tex")
+            found = next((c for c in candidates if c.exists()), None)
+            if found is not None:
+                out_lines.append(expand_latex_inputs(found, seen, root_dir))
+                continue
+        out_lines.append(line)
+    return "\n".join(out_lines)
+
+
+def strip_latex_non_prose_preserve_lines(text: str) -> tuple[list[str], int | None]:
+    """Return LaTeX prose lines (1-indexed alignment) with preamble, comments,
+    equations, tables, TikZ blocks, and bibliography blanked out.
+    """
+    raw_lines = text.splitlines()
+    out: list[str] = []
+    has_begin_doc = any(r"\begin{document}" in ln for ln in raw_lines)
+    in_doc = not has_begin_doc
+    skip_env_stack: list[str] = []
+    in_display_math = False
+    refs_line: int | None = None
+
+    for idx, line in enumerate(raw_lines):
+        lineno = idx + 1
+        if not in_doc:
+            if r"\begin{document}" in line:
+                in_doc = True
+            out.append("")
+            continue
+
+        # Strip unescaped LaTeX comments
+        no_comment = re.sub(r"(?<!\\)%.*$", "", line)
+        stripped = no_comment.strip()
+
+        if refs_line is None and re.search(r"\\(?:bibliography|printbibliography)\b|\\begin\{thebibliography\}", stripped):
+            refs_line = lineno
+        if r"\end{document}" in stripped:
+            out.append("")
+            refs_line = refs_line or lineno
+            continue
+        if refs_line is not None:
+            out.append("")
+            continue
+
+        # Track skipped environments (equations, tables, tikz, verbatim, etc.)
+        begins = re.findall(r"\\begin\{([^}]+)\}", stripped)
+        ends = re.findall(r"\\end\{([^}]+)\}", stripped)
+        entered_skip = False
+        for env in begins:
+            if env in LATEX_SKIP_ENVS:
+                skip_env_stack.append(env)
+                entered_skip = True
+        if skip_env_stack:
+            for env in ends:
+                if skip_env_stack and skip_env_stack[-1] == env:
+                    skip_env_stack.pop()
+            out.append("")
+            continue
+        if entered_skip:
+            out.append("")
+            continue
+
+        # Display math \[ ... \] or $$ ... $$
+        if r"\[" in stripped or stripped.startswith("$$"):
+            if not (r"\]" in stripped or (stripped.startswith("$$") and stripped.endswith("$$") and len(stripped) > 2)):
+                in_display_math = True
+            out.append("")
+            continue
+        if in_display_math:
+            if r"\]" in stripped or "$$" in stripped:
+                in_display_math = False
+            out.append("")
+            continue
+
+        # Skip pure structural/layout command lines
+        if (
+            not stripped
+            or re.match(
+                r"^\\(?:begin|end|centering|raggedright|vspace|hspace|label|includegraphics|graphicspath|"
+                r"maketitle|tableofcontents|clearpage|newpage|appendix|noindent|smallskip|medskip|bigskip|"
+                r"toprule|midrule|bottomrule|bibliographystyle|setcounter|renewcommand|newcommand|def|"
+                r"title|author|affil|icml\w+|date|keywords)\b",
+                stripped,
+            )
+            and not LATEX_HEADING_RE.match(stripped)
+        ):
+            out.append("")
+            continue
+
+        # Mark LaTeX section headers with '#' prefix so downstream heading checks recognize them
+        if LATEX_HEADING_RE.match(stripped):
+            out.append("# " + re.sub(r"^\\[a-zA-Z]+\*?\{(.*)\}$", r"\1", stripped))
+            continue
+
+        out.append(no_comment)
+
+    return out, refs_line
+
+
+def clean_inline_markup(line: str, is_latex: bool = False) -> str:
+    """Strip inline code, inline math, URLs, markdown links, and LaTeX commands for prose checks."""
     s = re.sub(r"`[^`]*`", " ", line)
     s = re.sub(r"\$[^$]*\$", " ", s)
     s = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", s)
     s = re.sub(r"https?://\S+", " ", s)
+    if is_latex:
+        s = re.sub(r"\\cite[a-z]*\*?(?:\[[^\]]*\])*\{[^}]*\}", " ", s)
+        s = re.sub(r"\\(?:ref|eqref|autoref|cref|Cref|label|url|pageref)\{[^}]*\}", " ", s)
+        s = re.sub(r"\\href\{[^}]*\}\{([^}]*)\}", r"\1", s)
+        s = re.sub(r"\\(?:textbf|textit|emph|texttt|textsc|textrm|textsf|underline|paragraph|caption|footnote)\*?\{([^{}]*)\}", r"\1", s)
+        s = re.sub(r"\\(?:textbf|textit|emph|texttt|textsc|textrm|textsf|underline|paragraph|caption|footnote)\*?\{([^{}]*)\}", r"\1", s)
+        s = re.sub(r"\\%", "%", s)
+        s = re.sub(r"\\&", "&", s)
+        s = re.sub(r"~", " ", s)
+        s = re.sub(r"\\[a-zA-Z]+\*?(?:\[[^\]]*\])?", " ", s)
+        s = re.sub(r"[{}]", "", s)
     return s
 
 
-def count_words(prose_lines: list[str], exclude_headings: bool = True) -> int:
+def count_words(prose_lines: list[str], exclude_headings: bool = True, is_latex: bool = False) -> int:
     total = 0
     for line in prose_lines:
         stripped = line.strip()
@@ -213,7 +376,7 @@ def count_words(prose_lines: list[str], exclude_headings: bool = True) -> int:
             continue
         if exclude_headings and stripped.startswith("#"):
             continue
-        cleaned = clean_inline_markup(stripped)
+        cleaned = clean_inline_markup(stripped, is_latex=is_latex)
         cleaned = re.sub(r"<!--.*?-->", "", cleaned)
         # Drop Pandoc citations like [@smith2024; @jones2025] from word count? Keep conservative standard word split
         words = re.findall(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*", cleaned)
@@ -225,6 +388,7 @@ def check_style(
     prose_lines: list[str],
     banned_patterns: list[str],
     ambiguous_verbs: list[str],
+    is_latex: bool = False,
 ) -> list[Finding]:
     findings: list[Finding] = []
     compiled_banned = [(pat, re.compile(pat, re.IGNORECASE)) for pat in banned_patterns]
@@ -244,10 +408,13 @@ def check_style(
 
         is_heading = stripped.startswith("#")
         is_list_item = bool(re.match(r"^(?:[-*+]|\d+\.)\s+", stripped))
-        cleaned = clean_inline_markup(stripped)
+        cleaned = clean_inline_markup(stripped, is_latex=is_latex)
 
-        # 1. Em dashes (hard STYLE.md rule)
-        if "\u2014" in cleaned or re.search(r"(?<=\s)---?(?=\s)", cleaned):
+        # 1. Em dashes (hard STYLE.md rule; in LaTeX also catch '---' without spaces, allowing '--' en dashes)
+        has_em_dash = "\u2014" in cleaned or bool(re.search(r"(?<=\s)---?(?=\s)", cleaned))
+        if is_latex and re.search(r"(?<!-)---(?!-)", cleaned):
+            has_em_dash = True
+        if has_em_dash:
             findings.append(
                 Finding(
                     severity="error",
@@ -536,6 +703,7 @@ def check_number_provenance(
     result_paths: list[Path],
     rel_tol: float = 0.005,
     strict_numbers: bool = False,
+    is_latex: bool = False,
 ) -> tuple[list[Finding], int, int]:
     """Cross-check empirical numbers in prose against locked JSON scalars.
 
@@ -557,7 +725,7 @@ def check_number_provenance(
         stripped = raw_line.strip()
         if not stripped or stripped.startswith("#"):
             continue
-        cleaned = clean_inline_markup(stripped)
+        cleaned = clean_inline_markup(stripped, is_latex=is_latex)
         # Mask bracketed [1, 2, 15-18] and parenthetical (1, 2–4) numbered citations
         cleaned = re.sub(r"\[\d+(?:\s*[,–\-]\s*\d+)*\]", " ", cleaned)
         cleaned = re.sub(r"\(\d{1,3}(?:\s*[,–\-]\s*\d{1,3})*\)", " ", cleaned)
@@ -611,16 +779,18 @@ def expand_paths(patterns: list[str]) -> list[Path]:
 
 
 def check_inline_comments(full_text: str, forbid_comments: bool = False) -> tuple[list[Finding], int]:
-    """Detect unresolved inline review comments (e.g. <!-- @comment --> ... <!-- /@comment: ... -->)."""
+    """Detect unresolved inline review comments in Markdown (<!-- @comment -->) or LaTeX (% @comment ...)."""
     findings: list[Finding] = []
     count = 0
     severity = "error" if forbid_comments else "warn"
-    pat = re.compile(r"<!--\s*/?@comment\b[^>]*-->", re.IGNORECASE)
+    md_pat = re.compile(r"<!--\s*/?@comment\b[^>]*-->", re.IGNORECASE)
+    tex_pat = re.compile(r"(?<!\\)%\s*@comment\b.*", re.IGNORECASE)
     for lineno, line in enumerate(full_text.splitlines(), start=1):
-        matches = list(pat.finditer(line))
-        # Count each comment opening (or standalone /@comment) once per pair
-        opens = [m for m in matches if not m.group(0).lstrip("<!- ").startswith("/")]
-        n_here = len(opens) if opens else len(matches)
+        md_matches = list(md_pat.finditer(line))
+        opens = [m for m in md_matches if not m.group(0).lstrip("<!- ").startswith("/")]
+        n_md = len(opens) if opens else len(md_matches)
+        n_tex = len(tex_pat.findall(line))
+        n_here = n_md + n_tex
         if n_here:
             count += n_here
             findings.append(
@@ -635,10 +805,45 @@ def check_inline_comments(full_text: str, forbid_comments: bool = False) -> tupl
     return findings, count
 
 
-def check_figure_links(full_text: str, manuscript_path: Path) -> list[Finding]:
-    """Verify that local markdown image embeds ![alt](path) resolve to existing files."""
+def check_figure_links(full_text: str, manuscript_path: Path, is_latex: bool = False) -> list[Finding]:
+    """Verify that local markdown image embeds or LaTeX \\includegraphics targets resolve to existing files."""
     findings: list[Finding] = []
     base_dir = manuscript_path.resolve().parent
+
+    if is_latex:
+        search_dirs = [base_dir]
+        for gp in re.findall(r"\\graphicspath\{((?:\s*\{[^}]+\}\s*)+)\}", full_text, re.DOTALL):
+            for sub in re.findall(r"\{([^}]+)\}", gp):
+                search_dirs.append((base_dir / sub).resolve())
+        inc_re = re.compile(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}")
+        exts = ("", ".pdf", ".png", ".jpg", ".jpeg", ".eps", ".svg")
+        for lineno, line in enumerate(full_text.splitlines(), start=1):
+            no_comment = re.sub(r"(?<!\\)%.*$", "", line)
+            for m in inc_re.finditer(no_comment):
+                raw_target = m.group(1).strip()
+                if "\\" in raw_target:
+                    continue  # macro path
+                exists = False
+                for d in search_dirs:
+                    for ext in exts:
+                        cand = (d / f"{raw_target}{ext}").resolve()
+                        if cand.exists():
+                            exists = True
+                            break
+                    if exists:
+                        break
+                if not exists:
+                    findings.append(
+                        Finding(
+                            severity="error",
+                            rule="missing-figure",
+                            line=lineno,
+                            message=f"Embedded LaTeX figure not found: '{raw_target}'.",
+                            excerpt=line.strip()[:120],
+                        )
+                    )
+        return findings
+
     in_fence = False
     img_re = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
     for lineno, line in enumerate(full_text.splitlines(), start=1):
@@ -684,8 +889,13 @@ def lint_manuscript(
     forbid_comments: bool = False,
 ) -> dict[str, Any]:
     cfg = load_config(config_path)
-    full_text = manuscript_path.read_text(encoding="utf-8")
-    prose_lines, refs_line = strip_non_prose_preserve_lines(full_text)
+    is_latex = manuscript_path.suffix.lower() == ".tex"
+    if is_latex:
+        full_text = expand_latex_inputs(manuscript_path)
+        prose_lines, refs_line = strip_latex_non_prose_preserve_lines(full_text)
+    else:
+        full_text = manuscript_path.read_text(encoding="utf-8")
+        prose_lines, refs_line = strip_non_prose_preserve_lines(full_text)
 
     effective_max_words = max_words if max_words is not None else cfg.get("max_words")
     banned_patterns = list(DEFAULT_BANNED_PHRASES)
@@ -697,7 +907,7 @@ def lint_manuscript(
     ambiguous_verbs = cfg.get("ambiguous_verbs", DEFAULT_AMBIGUOUS_VERBS)
 
     findings: list[Finding] = []
-    word_count = count_words(prose_lines)
+    word_count = count_words(prose_lines, is_latex=is_latex)
     if effective_max_words is not None and word_count > int(effective_max_words):
         findings.append(
             Finding(
@@ -708,23 +918,23 @@ def lint_manuscript(
             )
         )
 
-    findings.extend(check_style(prose_lines, banned_patterns, ambiguous_verbs))
+    findings.extend(check_style(prose_lines, banned_patterns, ambiguous_verbs, is_latex=is_latex))
     comment_findings, unresolved_comments = check_inline_comments(
         full_text, forbid_comments=(forbid_comments or strict)
     )
     findings.extend(comment_findings)
-    findings.extend(check_figure_links(full_text, manuscript_path))
+    findings.extend(check_figure_links(full_text, manuscript_path, is_latex=is_latex))
 
     if bib_path:
         findings.extend(check_citations_bib(full_text, bib_path))
-    if check_md_refs:
+    if check_md_refs and not is_latex:
         findings.extend(check_numbered_md_refs(full_text, refs_line))
 
     num_checked = 0
     num_matched = 0
     if result_paths:
         num_findings, num_checked, num_matched = check_number_provenance(
-            prose_lines, result_paths, rel_tol=rel_tol, strict_numbers=strict_numbers
+            prose_lines, result_paths, rel_tol=rel_tol, strict_numbers=strict_numbers, is_latex=is_latex
         )
         findings.extend(num_findings)
 

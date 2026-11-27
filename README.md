@@ -1,188 +1,68 @@
 # Lab of Agents
 
-A team of AI scientist colleagues: not assistants who execute, but peers who think, argue, and push back. Each has distinct values and taste. The value is in the dialectic.
+A suite of [Agent Skills](https://agentskills.io) for end-to-end academic research—combining a 5-persona AI research group (`/lab`) with specialized skills for drafting, polishing, publication figures, interactive paper explainers, reference verification, code/replication audits, IRB packets, and refereeing.
 
-Lead is the main Claude session. The other personas run as parallel [subagents](https://code.claude.com/docs/en/sub-agents). Lead briefs them, relays disagreements between them for a round or two, and reports to you (the PI). If you've enabled the experimental [Agent Teams](https://code.claude.com/docs/en/agent-teams) feature, `/lab` can run them as a persistent team instead.
-
-**Key principle:** Surface tensions, don't paper over them. When personas disagree, Lead works the disagreement down to its crux and takes a position grounded in it. Only high-stakes or irreversible calls come to you.
+![Lab of Agents Research Workflow](workflow.svg)
 
 ## Install
 
-The lab is three [Agent Skills](https://agentskills.io) (`/lab`, `/draft`, `/save`), written for Claude Code. Other agents that read the format can load them too, but `/lab`, `/fan-out`, `/research`, `/referee`, and `/irb` checkers work best with subagents. Four more sit alongside the lab: `/research` orchestrates a full stage-gated research loop from a starting question to a verified manuscript, `/fan-out` schedules a batch of independent work, `/referee` turns a paper you marked up by hand into a transcription of your notes and a terse referee report in your voice, and `/irb` drafts, audits, and synchronizes Exempt online human-subjects IRB packets with experiment code. Install them once, at user level, and they work in every project. Nothing goes into your project's repo except the session state `/save` writes (`CONTEXT.md` and `log/`).
+Install once at user level so every skill works in any project. In Claude Code (or any Agent Skills client):
 
-Quickest: in Claude Code, say
-
-```
+```text
 Install the agent lab skills from https://github.com/harangju/agent-lab/ into ~/.agents/skills and ~/.claude/skills
 ```
 
-Manual install. To get updates with `git pull`, clone the repo and symlink the skills in:
+Or clone and symlink to stay updated with `git pull` (use `cp -R` instead if you want private local edits):
 
 ```bash
 git clone https://github.com/harangju/agent-lab.git ~/agent-lab
 mkdir -p ~/.agents/skills ~/.claude/skills
-for s in lab draft save fan-out referee research irb; do
-  ln -s ~/agent-lab/.agents/skills/$s ~/.agents/skills/$s   # cross-client location
-  ln -s ~/agent-lab/.agents/skills/$s ~/.claude/skills/$s   # Claude Code
+for s in lab draft polish figures walkthrough refs audit save fan-out referee research irb citations; do
+  ln -s ~/agent-lab/.agents/skills/$s ~/.agents/skills/$s
+  ln -s ~/agent-lab/.agents/skills/$s ~/.claude/skills/$s
 done
 ```
 
-To keep your own edits (personas, norms, `STYLE.md`) private, copy the folders with `cp -R` instead of symlinking them. This is a public repo, so anything you commit to a clone goes public when you push.
+**Optional paper search MCP:** Connect [Consensus](https://consensus.app) or add [Semantic Scholar](https://www.semanticscholar.org/product/api) (`claude mcp add --transport stdio --scope user semantic-scholar -- uvx semantic-scholar-fastmcp`).
 
-**Paper search (recommended).** The personas use two tools when they're connected:
-
-- [Semantic Scholar](https://www.semanticscholar.org/product/api) for exact paper lookup and citation graphs
-- [Consensus](https://consensus.app) for question-level literature search
-
-Add Semantic Scholar at user scope (requires [`uv`](https://docs.astral.sh/uv/)):
-
-```bash
-claude mcp add --transport stdio --scope user semantic-scholar -- uvx semantic-scholar-fastmcp
-```
-
-The free tier allows 100 requests per 5 minutes, which a literature-heavy `/lab` run can use up. With a key, add `--env SEMANTIC_SCHOLAR_API_KEY=<your key>` right after `add`. Connect Consensus from claude.ai's connector settings.
-
-## How to Use
+## Commands
 
 | Command | What it does |
-| ------- | ------------ |
-| `/lab [task]` | Convene the group on anything: a topic to explore, an idea or design to critique, results to interpret, a section to draft, a draft to review, or feedback to triage. Lead picks the right personas and phases. Writing tasks go through `/draft`. |
-| `/draft [section or file] [ask]` | Draft or revise prose on its own: a paper section, abstract, grant section, related work, or response letter. Follows `STYLE.md` and loads only the section template it needs. |
-| `/save [topic]` | Checkpoint: append a session log, rewrite `CONTEXT.md`, and propose standing rules when your feedback keeps recurring. |
-| `/fan-out [batch]` | Schedule a batch of independent work so you review once. Lead splits it across parallel workers, brings the pieces together, checks them, and hands you one review page. |
-| `/research [question or resume]` | Run a six-stage research loop from a starting question to a verified manuscript, composing `/lab`, `/draft`, `/save`, and `/fan-out` with automated 1-seed pilots, raw-log inspection, style/provenance linting, and five PI decision gates. |
-| `/irb [draft \| sync \| revise \| stamp \| closeout] [path]` | Draft, sync, revise, stamp, or closeout Exempt online IRB packets (application draft, `.docx` consent/recruitment/task attachments, and live experiment code/config) with amendment-proof bounds and fresh-context sync/compliance checks. Keeps PI details in a local untracked profile (`~/.config/agent-lab/irb-profile.md`). |
+| --- | --- |
+| `/research [question \| resume]` | Orchestrate the full 6-stage loop (framing, toy proof, 1-seed pilot, sweeps, drafting, verification, R&R) with PI decision gates. |
+| `/lab [task]` | Convene 5 parallel personas to explore a topic, critique a design, analyze results, review a draft, or triage referee feedback. |
+| `/draft [section] [ask]` | Write clean first drafts from notes or locked results using `STYLE.md`, section templates, venue exemplars, and genre playbooks (`ml`, `behavioral`, `general-science`, `management-econ`). |
+| `/polish [mode \| file]` | Revise existing LaTeX/Markdown manuscripts: resolve `% @comment` / `<!-- @comment -->` notes into `notes/review_comments.jsonl`, audit against venue exemplars and standard field terminology, propagate renames, and run a fresh PI-eye self-audit. |
+| `/figures [figure \| script]` | Design and regenerate publication figures (Matplotlib SVG/PDF, TikZ), inspect rendered PDF pages for print-scale legibility, and sync titles and captions. |
+| `/walkthrough [paper]` | Build a self-contained, 60–120fps 2D animated HTML paper explainer (`notes/walkthrough.html`) with headless-Chrome visual QA. |
+| `/refs [verify \| check]` | Verify every `.bib` entry and in-text citation against arXiv, Crossref, and OpenAlex, or run a fast arXiv relevance/scoop check against `CONTEXT.md`. |
+| `/audit [scope]` | Run a 4-track parallel pre-submission audit: prune dead scripts and cluster launchers, hunt silent code/split bugs, and verify offline paper-vs-JSON replication. |
+| `/fan-out [batch]` | Split independent work across parallel workers, integrate and verify where pieces meet, and hand back one visual review page. |
+| `/save [topic]` | Append a session log to `log/`, compact `CONTEXT.md`, and mine `log/` + `notes/review_comments.jsonl` to propose standing rules. |
+| `/irb [draft \| sync \| revise \| stamp \| closeout]` | Draft, sync, and audit Exempt online human-subjects IRB packets (`.docx` attachments + live experiment code). |
+| `/referee [pdf]` | Transcribe hand-marked PDF margins into `comments.md` and draft a terse referee report in your voice with fresh-context checkers. |
+| `/citations [scholar id]` | Delta-sync a local Google Scholar citation snapshot (`citations.jsonl`) fetching only changed papers. |
 
-Examples:
+## `/lab` Personas
 
-```
-/research does double-blind peer review change acceptance gaps across subfields?
-/research resume
-/lab explore how LLM agents coordinate without a shared memory
-/lab critique this design: notes/plan.md
-/lab review drafts/intro.md
-/draft results section from notes/results.md
-/fan-out the five open items in TODO.md
-```
+Lead runs in your main session and coordinates five parallel subagents; only high-stakes or irreversible cruxes escalate to you.
 
-### Writing
+| Persona | Owns | Core question |
+| --- | --- | --- |
+| **Lead** | Presentation | Works disagreements down to their crux and recommends a call |
+| **Skeptic** | Novelty | "Has this been done? What's actually new?" |
+| **Methodologist** | Rigor | "Is this sound? Does the code/data back it up?" |
+| **Visionary** | Impact | "So what? Who cares? Think bigger." |
+| **Newcomer** | Clarity | "You lost me. Explain it simply." |
+| **Connector** | Integration | "How does this link to adjacent fields?" |
 
-`/draft` keeps everything in its own `references/` folder:
+## Project State & Private Config
 
-- **`STYLE.md`** holds the sentence, punctuation, content, grammar, and composition rules, your voice and phrasing, the response-letter rules, and the hard constraints. Edit it to match your own voice. A `STYLE.md` in the project you're writing in, such as a paper's or a grant's, adds to it and wins on conflicts.
-- **Section templates**, loaded one at a time as a task needs them: abstract (Nature summary paragraph), introduction, theory, related work, results (paragraph and full section), discussion, methods, grant section, and response letter, plus paragraph and narrative structure.
+Skills hold stable craft rules under `.agents/skills/`; each project only stores its own living state:
 
-Let them argue. Steer the debate as PI: break ties, redirect, ask follow-ups. Follow-ups go back to the same personas, who keep their context.
-
-### Fan-out
-
-`/fan-out` is about scheduling, not critique. Hand it a batch of independent work, such as five grant sections, a list of open questions, or a release's worth of fixes. Lead then:
-
-1. Proposes a split and waits for your go. No two workers own the same thing, and every rule the pieces share gets one owner.
-2. Runs the workers in parallel. A worker can be a side session, a subagent, or a `/lab` or `/draft` run.
-3. Brings the pieces together, checks them the way you would, and fixes what breaks where they meet.
-4. Hands you one review page. Each change gets a Before and a Now, shown as a visual (screenshots, a chart, a table or an illustration), plus a tag saying whether Lead saw it working.
-
-You review once, at the end. Fixes from your review go on the same page.
-
-## Personas
-
-A MECE decomposition of research critique: each persona owns one dimension. Spawn prompts live in `.agents/skills/lab/references/personas.md`.
-
-| Persona | Dimension | Asks | Prevents |
-|---------|-----------|------|----------|
-| **Lead** (you're talking to it) | Presentation | Briefs the group, works disagreements to a crux, presents the argument | Weak framing, unclear narrative |
-| **Skeptic** | Novelty | "Has this been done? What's actually new?" | Wasting time on existing work |
-| **Methodologist** | Rigor | "Is this sound? Would it generalize?" | Publishing claims you can't defend |
-| **Visionary** | Impact | "So what? Who cares? Think bigger." | Working on incremental stuff that won't matter |
-| **Newcomer** | Clarity | "You lost me. Explain it simply." | Jargon-heavy work that nobody reads |
-| **Connector** | Integration | "How does this relate to X in [other field]?" | Missing complementary work, thinking in silos |
-
-**Natural tensions:**
-- Visionary wants to swing big → Methodologist asks if the methods support it
-- Visionary says "Nature material" → Skeptic asks what's actually new
-- Methodologist wants more experiments → Visionary asks if it's worth the time
-- Connector draws links to adjacent fields → Skeptic asks if those links are real
-- Newcomer says the framing is unclear → Lead defends, others weigh in on whether the confusion reveals a real gap
-
-## Context Management
-
-The lab keeps its rules in the skills and its state in your project.
-
-| In the skills (all projects) | `CONTEXT.md` (per project) | `log/` (per project) |
-| ---------------------------- | -------------------------- | -------------------- |
-| How to behave: principles, report format, personas, norms, style | What matters now | Everything that happened |
-| Stable; you approve changes | Rewritten by every `/save` | Append-only |
-
-Your project's own `AGENTS.md` or `CLAUDE.md` still applies as usual. If a project has no `CONTEXT.md` (or `context.md`) yet, the Lead orients from those files and the project's README or plan.
-
-### Session flow
-
-```
-Session starts  → Lead reads CONTEXT.md (or context.md / the project's own docs)
-During session  → personas work and return results, no file writes
-Session ends    → /save appends a session log to log/
-                → /save rewrites CONTEXT.md via compaction
-```
-
-Personas don't write files during the session, which avoids conflicts when they run in parallel. All persistence happens at the end, through `/save`.
-
-### Learning loop
-
-`/save` logs your steering (tie-breaks, corrections, quality signals, persona calibration). When a pattern recurs across logs, `/save` proposes a standing rule routed to the file that governs it, and applies it only with your approval:
-
-1. **Agent workflow, coding, or communication → `AGENTS.md` / `CLAUDE.md`** (or user-level agent rules if cross-project).
-2. **Writing or formatting → `STYLE.md`** (project-level, or `draft/references/STYLE.md` across projects).
-3. **`/lab` deliberation norms → `lab/references/norms.md`**, which every `/lab` run follows.
-4. **`/lab` persona tuning → `lab/references/personas.md`**, for a persona that is consistently miscalibrated.
-
-A research lesson or decision specific to one project goes in that project's `CONTEXT.md` instead.
-
-## File Structure
-
-```
-.agents/skills/               # .claude/skills is a symlink to this
-├── lab/
-│   ├── SKILL.md                 # Lead protocol, principles, report format
-│   └── references/
-│       ├── personas.md          # persona spawn prompts
-│       └── norms.md             # your standing lab norms
-├── draft/
-│   ├── SKILL.md                 # writing workflow
-│   └── references/              # STYLE.md + section templates (loaded on demand)
-├── save/SKILL.md                # session log + CONTEXT.md compaction
-├── fan-out/
-│   ├── SKILL.md                 # split, integrate, check, hand over one review
-│   ├── template.html            # the review page
-│   └── references/code.md       # extra steps when the batch is code
-└── referee/
-    ├── SKILL.md                 # marked-up PDF → comments.md → review → revisions
-    ├── scripts/find_ink.py      # locate handwriting and save zoomed crops
-    └── references/              # formats.md (comments + review), voice.md, checkers.md
-└── research/
-    ├── SKILL.md                 # stage-gated research orchestrator (Stages 0–6, including R&R)
-    ├── template.html            # PI gate decision card
-    ├── references/              # gates.md (schemas + S-tier checks), scaffold.md, revision.md
-    └── scripts/                 # lint_manuscript.py, pilot_scan.py, pilot_workflow.py, stage4_review_workflow.py, checkpoint.py
-└── irb/
-    ├── SKILL.md                 # Exempt IRB workflow (draft, sync, revise, stamp, closeout)
-    ├── references/              # institutions/jhu-hirb.md, consent-formats.md, amendment-proofing.md, checkers.md, profile.example.md
-    └── scripts/                 # build_docx.py (Markdown → .docx), audit_packet.py (code/IRB sync & compliance audit)
-```
-
-In each project, `/save` creates:
-
-```
-CONTEXT.md                       # compacted state
-log/YYYY-MM-DD-HHmm-topic.md     # session logs (append-only)
-```
-
-## Vocabulary
-
-Useful words when talking to Claude:
-
-- **connective tissue**: prose that links sections or ideas
-- **load-bearing**: assumptions or components critical to the argument
+- **`CONTEXT.md` & `log/`** — Compacted project state and append-only session logs maintained by `/save`.
+- **`notes/STYLE.md` & `notes/review_comments.jsonl`** — Project terminology overrides and logged editorial edits mined by `/save` for recurring standing rules.
+- **`~/.config/agent-lab/`** — Local untracked files for private pointers (`exemplars.json`, `irb-profile.md`, `citations-profile.json`) so personal details stay out of this public repo.
 
 ## License
 

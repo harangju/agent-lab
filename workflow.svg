@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 510" width="1080" height="510" role="img" aria-label="Lab of Agents Research Workflow">
+  <defs>
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .title { font-size: 14.5px; font-weight: 700; fill: #1F242B; }
+      .stage-title { font-size: 13px; font-weight: 700; fill: #1F242B; }
+      .cmd { font-size: 12px; font-weight: 700; fill: #1F242B; }
+      .cmd-blue { font-size: 12px; font-weight: 700; fill: #355878; }
+      .cmd-rust { font-size: 12px; font-weight: 700; fill: #9A4820; }
+      .cmd-light { font-size: 12px; font-weight: 700; fill: #FFFFFF; }
+      .arg { font-size: 10.5px; fill: #6B7280; }
+      .desc { font-size: 10.5px; fill: #374151; }
+      .desc-light { font-size: 11px; fill: #E5E9F0; }
+      .muted { font-size: 10px; fill: #6B7280; }
+      .kicker { font-size: 9.5px; font-weight: 700; fill: #6B7280; letter-spacing: 0.08em; }
+      .badge-num { font-size: 11px; font-weight: 700; fill: #FFFFFF; }
+    </style>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#2B3440"/>
+    </marker>
+    <marker id="arr-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#7A8694"/>
+    </marker>
+  </defs>
+
+  <!-- Soft Editorial Outer Backdrop (matches reference light-gray frame) -->
+  <rect x="0" y="0" width="1080" height="510" rx="16" fill="#F2F3F2"/>
+
+  <!-- ==================== TOP LAYER: ORCHESTRATOR ==================== -->
+  <g>
+    <rect x="20" y="20" width="1040" height="54" rx="10" fill="#FFFFFF" stroke="#4A7298" stroke-width="1.5"/>
+    <circle cx="42" cy="47" r="4.5" fill="#4A7298"/>
+    <text x="58" y="51" class="mono cmd-blue">/research</text>
+    <line x1="138" y1="35" x2="138" y2="59" stroke="#D8DDE2" stroke-width="1"/>
+    <text x="154" y="44" class="mono desc" font-weight="600" fill="#1F242B">Orchestrates the full loop end-to-end with PI decision gates</text>
+    <text x="154" y="60" class="mono muted">framing · 1-seed pilots · raw-log audits · sweeps · drafting · verification · R&amp;R</text>
+  </g>
+
+  <!-- Subtle downward dashed orchestration connectors -->
+  <line x1="146" y1="74" x2="146" y2="95" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+  <line x1="436" y1="74" x2="436" y2="95" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+  <line x1="816" y1="74" x2="816" y2="95" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+
+  <!-- ==================== MIDDLE LAYER: WHITE STAGE PANEL ==================== -->
+  <rect x="20" y="99" width="1040" height="236" rx="12" fill="#FFFFFF"/>
+
+  <!-- STAGE 1: FRAME & PREP (Steel Blue — x=36..248, w=212, cx=142) -->
+  <g>
+    <rect x="36" y="115" width="212" height="204" rx="10" fill="#E8F0F6" stroke="#4A7298" stroke-width="1.5"/>
+    <circle cx="56" cy="136" r="10.5" fill="#4A7298"/>
+    <text x="56" y="140" text-anchor="middle" class="mono badge-num">1</text>
+    <text x="74" y="140" class="mono stage-title">Frame &amp; Prep</text>
+
+    <!-- /refs check -->
+    <rect x="46" y="158" width="192" height="70" rx="7" fill="#FFFFFF" stroke="#C5D6E5" stroke-width="1"/>
+    <text x="56" y="177" class="mono cmd-blue">/refs</text>
+    <text x="98" y="177" class="mono arg">check &lt;arxiv&gt;</text>
+    <text x="56" y="196" class="mono desc">arXiv relevance &amp; scoop</text>
+    <text x="56" y="211" class="mono desc">triage vs CONTEXT.md</text>
+
+    <!-- /irb (optional dashed) -->
+    <rect x="46" y="236" width="192" height="72" rx="7" fill="#F8FAFC" stroke="#9BB4CA" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="56" y="255" class="mono cmd-blue">/irb</text>
+    <text x="90" y="255" class="mono arg">draft | sync</text>
+    <text x="56" y="274" class="mono desc">Exempt IRB &amp; code sync</text>
+    <text x="56" y="289" class="mono muted">(human studies only)</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 (x=248..338, generous 90px span) -->
+  <text x="293" y="206" text-anchor="middle" class="mono muted">pilots &amp; runs</text>
+  <line x1="256" y1="217" x2="331" y2="217" stroke="#2B3440" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="293" y="233" text-anchor="middle" class="mono muted">results/</text>
+
+  <!-- STAGE 2: DRAFT (Terracotta — x=338..542, w=204, cx=440) -->
+  <g>
+    <rect x="338" y="115" width="204" height="204" rx="10" fill="#F8ECE4" stroke="#B85A2D" stroke-width="1.5"/>
+    <circle cx="358" cy="136" r="10.5" fill="#B85A2D"/>
+    <text x="358" y="140" text-anchor="middle" class="mono badge-num">2</text>
+    <text x="376" y="140" class="mono stage-title">Draft</text>
+
+    <!-- /draft -->
+    <rect x="348" y="158" width="184" height="150" rx="7" fill="#FFFFFF" stroke="#E4C6B4" stroke-width="1"/>
+    <text x="358" y="177" class="mono cmd-rust">/draft</text>
+    <text x="410" y="177" class="mono arg">new prose</text>
+    <text x="358" y="199" class="mono desc">First drafts from locked</text>
+    <text x="358" y="214" class="mono desc">results via STYLE.md,</text>
+    <text x="358" y="229" class="mono desc">section templates &amp;</text>
+    <text x="358" y="244" class="mono desc">genre playbooks</text>
+    <text x="358" y="261" class="mono muted">ml · behav · sci · econ</text>
+    <line x1="358" y1="274" x2="522" y2="274" stroke="#EFE4DD" stroke-width="1"/>
+    <text x="358" y="292" class="mono muted">+ R&amp;R response letters</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 (x=542..572) -->
+  <line x1="546" y1="217" x2="567" y2="217" stroke="#2B3440" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- STAGE 3: POLISH, FIGURES & VERIFY (Steel Blue — x=572..1044, w=472, cx=808) -->
+  <g>
+    <rect x="572" y="115" width="472" height="204" rx="10" fill="#E8F0F6" stroke="#4A7298" stroke-width="1.5"/>
+    <circle cx="592" cy="136" r="10.5" fill="#4A7298"/>
+    <text x="592" y="140" text-anchor="middle" class="mono badge-num">3</text>
+    <text x="610" y="140" class="mono stage-title">Polish, Figures &amp; Verify</text>
+    <text x="1034" y="140" text-anchor="end" class="mono muted">pre-submission</text>
+
+    <!-- /polish -->
+    <rect x="582" y="158" width="222" height="70" rx="7" fill="#FFFFFF" stroke="#C5D6E5" stroke-width="1"/>
+    <text x="592" y="177" class="mono cmd-blue">/polish</text>
+    <text x="650" y="177" class="mono arg">@comments | audit</text>
+    <text x="592" y="196" class="mono desc">JSONL log, exemplars,</text>
+    <text x="592" y="211" class="mono desc">terms, sync &amp; self-audit</text>
+
+    <!-- /figures -->
+    <rect x="812" y="158" width="222" height="70" rx="7" fill="#FFFFFF" stroke="#C5D6E5" stroke-width="1"/>
+    <text x="822" y="177" class="mono cmd-blue">/figures</text>
+    <text x="888" y="177" class="mono arg">plots &amp; PDF QA</text>
+    <text x="822" y="196" class="mono desc">Vector/TikZ, rendered</text>
+    <text x="822" y="211" class="mono desc">PDF legibility &amp; captions</text>
+
+    <!-- /refs verify -->
+    <rect x="582" y="236" width="222" height="72" rx="7" fill="#FFFFFF" stroke="#C5D6E5" stroke-width="1"/>
+    <text x="592" y="255" class="mono cmd-rust">/refs</text>
+    <text x="634" y="255" class="mono arg">verify .bib &amp; cites</text>
+    <text x="592" y="274" class="mono desc">arXiv/Crossref check &amp;</text>
+    <text x="592" y="289" class="mono desc">in-text citation audit</text>
+
+    <!-- /audit -->
+    <rect x="812" y="236" width="222" height="72" rx="7" fill="#FFFFFF" stroke="#C5D6E5" stroke-width="1"/>
+    <text x="822" y="255" class="mono cmd-rust">/audit</text>
+    <text x="872" y="255" class="mono arg">4-track replication</text>
+    <text x="822" y="274" class="mono desc">Prune code, hunt bugs &amp;</text>
+    <text x="822" y="289" class="mono desc">verify paper vs JSONs</text>
+  </g>
+
+  <!-- Upward dashed connectors from Cross-Cutting Layer into stages -->
+  <line x1="146" y1="360" x2="146" y2="339" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+  <line x1="436" y1="360" x2="436" y2="339" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+  <line x1="816" y1="360" x2="816" y2="339" stroke="#7A8694" stroke-width="1.25" stroke-dasharray="3 3" marker-end="url(#arr-muted)"/>
+
+  <!-- ==================== BOTTOM LAYER: CROSS-CUTTING SKILLS ==================== -->
+  <g>
+    <rect x="20" y="362" width="1040" height="90" rx="12" fill="#FFFFFF" stroke="#D8DDE2" stroke-width="1"/>
+    <text x="36" y="381" class="mono kicker">USED AT EVERY STAGE</text>
+
+    <!-- /lab -->
+    <rect x="36" y="391" width="262" height="48" rx="7" fill="#F8ECE4" stroke="#B85A2D" stroke-width="1.2"/>
+    <text x="48" y="410" class="mono cmd-rust">/lab</text>
+    <text x="86" y="410" class="mono arg">5-persona critique</text>
+    <text x="48" y="427" class="mono desc">explore · critique · analyze · review</text>
+
+    <!-- /fan-out -->
+    <rect x="308" y="391" width="232" height="48" rx="7" fill="#E8F0F6" stroke="#4A7298" stroke-width="1.2"/>
+    <text x="320" y="410" class="mono cmd-blue">/fan-out</text>
+    <text x="386" y="410" class="mono arg">parallel batch</text>
+    <text x="320" y="427" class="mono desc">Split work → one review page</text>
+
+    <!-- /walkthrough -->
+    <rect x="550" y="391" width="260" height="48" rx="7" fill="#F8ECE4" stroke="#B85A2D" stroke-width="1.2"/>
+    <text x="562" y="410" class="mono cmd-rust">/walkthrough</text>
+    <text x="656" y="410" class="mono arg">explain &amp; share</text>
+    <text x="562" y="427" class="mono desc">Animated HTML paper &amp; talk demo</text>
+
+    <!-- /save -->
+    <rect x="820" y="391" width="224" height="48" rx="7" fill="#E8F0F6" stroke="#4A7298" stroke-width="1.2"/>
+    <text x="832" y="410" class="mono cmd-blue">/save</text>
+    <text x="876" y="410" class="mono arg">checkpoint</text>
+    <text x="832" y="427" class="mono desc">log/, CONTEXT.md, review JSONL</text>
+  </g>
+
+  <!-- ==================== QUIET FOOTER: STANDALONE UTILITIES ==================== -->
+  <g>
+    <text x="36" y="484" class="mono kicker">STANDALONE</text>
+    <circle cx="126" cy="480.5" r="3.5" fill="#4A7298"/>
+    <text x="138" y="484" class="mono cmd">/referee</text>
+    <text x="206" y="484" class="mono desc">Hand-marked PDF → referee report in your voice</text>
+
+    <line x1="566" y1="471" x2="566" y2="491" stroke="#CBD2D9" stroke-width="1"/>
+
+    <circle cx="586" cy="480.5" r="3.5" fill="#B85A2D"/>
+    <text x="598" y="484" class="mono cmd">/citations</text>
+    <text x="678" y="484" class="mono desc">Google Scholar delta citation snapshot</text>
+  </g>
+</svg>

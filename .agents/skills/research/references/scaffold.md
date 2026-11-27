@@ -6,17 +6,18 @@ When Gate 1 is approved on a new research question, create the minimal directory
 
 ```
 <project>/
-├── AGENTS.md           # Project operational invariants
-├── CONTEXT.md          # Living state (stage, charter, locked outputs, dead ends)
-├── log/                # Append-only checkpoint logs (YYYY-MM-DD-HHmm-topic.md)
-├── lit/                # Target venue exemplars + nearest-neighbor papers
+├── AGENTS.md                   # Project operational invariants
+├── CONTEXT.md                  # Living state (stage, charter, locked outputs, dead ends)
+├── log/                        # Append-only checkpoint logs (YYYY-MM-DD-HHmm-topic.md)
+├── lit/                        # Nearest-neighbor notes (keep large exemplar PDFs outside git via ~/.config/agent-lab/exemplars.json)
 ├── notes/
-│   ├── STYLE.md        # Project-specific terminology & voice overrides
-│   ├── paper.md        # Main manuscript (graduated from outline)
-│   └── si/             # Supplementary information
-├── scripts/            # Analysis, simulation, table & figure generators
-├── results/            # Locked JSON / parquet / CSV outputs + provenance manifests
-└── tests/              # Deterministic model invariants, prompt pins, provenance tests
+│   ├── STYLE.md                # Project-specific terminology & voice overrides
+│   └── review_comments.jsonl   # Append-only log of resolved % @comment / chat editorial edits
+├── paper/                      # Modular LaTeX manuscript (main.tex, sections/*.tex, ref.bib, tables/, figures/)
+│                               # (or notes/paper.md for Markdown-first drafts)
+├── scripts/                    # Analysis, simulation, table & figure generators + verify_replication.py
+├── results/                    # Locked JSON / parquet / CSV outputs + provenance manifests
+└── tests/                      # Deterministic model invariants, prompt pins, provenance tests
 ```
 
 ---
@@ -75,7 +76,8 @@ Project-level operational rules for all agents working in this repository.
 ## Manuscript & Provenance
 - **No hand-edited numbers:** Every reported statistic, table, and figure must be generated from scripts reading locked `results/` outputs.
 - **Follow `notes/STYLE.md`:** Project style rules override global defaults on conflicts.
-- **Git hygiene:** Auto-commit on green at stage boundaries: `false` (flip to `true` only if the PI opts in).
+- **Review comments log:** Whenever addressing inline `% @comment (...)` / `<!-- @comment -->` annotations or substantive chat review feedback, append each edit to `notes/review_comments.jsonl` before stripping comment tags.
+- **Git hygiene:** Auto-commit on green at stage boundaries: `false` (flip to `true` only if the PI opts in). Keep heavy reference PDFs out of git (use `~/.config/agent-lab/exemplars.json` instead).
 ```
 
 ---

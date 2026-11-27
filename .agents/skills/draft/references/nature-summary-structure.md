@@ -31,9 +31,9 @@ Use this as a structure guide for accessible scholarly abstracts and summary par
    - Explain why the result matters beyond the immediate case.
 
 7. Broader perspective.
-   - Use two or three sentences only if it improves accessibility.
+   - Use one or two sentences only if space permits and it improves accessibility.
    - Keep it readable to non-specialists.
-   - In a long summary paragraph, total length can approach 250 to 300 words, but shorter is usually better.
+   - **Check the target venue's hard word cap and tense against real exemplars first** (e.g., *Nature Machine Intelligence* caps abstracts at 150 words and uses consistent present tense; *Nature* caps summary paragraphs around 200 words). Venue guidelines and published exemplars always override generic length targets.
 
 ## Practical Compression
 
