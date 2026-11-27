@@ -6,11 +6,11 @@ Read this for any multi-paragraph drafting. Sentence-level rules live in `STYLE.
 
 Every paragraph (except in Abstract and Methods) follows this skeleton:
 
-1. **Topic sentence.** State the paragraph's claim or point. A reader skimming only topic sentences should get the paper's argument.
-   - ✓ Verify: Does this sentence make a claim, not just announce a topic? "The model fails on long sequences" not "We now discuss sequence length."
+1. **Topic sentence.** State the paragraph's claim or point in already-established terms before introducing concrete examples or new sub-concepts. Topic sentences anchor the knitting across paragraphs: a reader skimming only topic sentences should get the paper's argument without encountering unexplained terms or cold anecdotes.
+   - ✓ Verify: Does this sentence make a clear general claim in context, not just announce a topic or drop a cold example? "The model fails on long sequences" not "We now discuss sequence length" or "In one example from a 10-page document..."
 
-2. **Support** (2–4 sentences). Give evidence, reasoning, or elaboration that backs the topic sentence. Each supporting sentence should connect to the claim, not to each other in a chain.
-   - ✓ Verify: Could you delete any supporting sentence without weakening the claim? If yes, delete it.
+2. **Support** (2–4 sentences). Give evidence, reasoning, or concrete examples that back the topic sentence. Introduce only a few new terms as you go, define each before it carries weight, and knit each sentence to the terms already on the table so every sentence makes sense right where it sits.
+   - ✓ Verify: Could you delete any supporting sentence without weakening the claim, or does any sentence use a term that was not introduced first? If yes, cut or knit it.
 
 3. **Transition / setup** (0–1 sentence). Connect to the next paragraph. Bridge the gap once: either at the end of this paragraph or the start of the next, not both. Redundant bridging stutters.
    - ✓ Verify: Does the last sentence point forward? Does the next paragraph's topic sentence follow naturally?

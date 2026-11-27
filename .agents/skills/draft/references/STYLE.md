@@ -2,6 +2,14 @@
 
 These are the shared writing rules for all prose: papers, grants, notes, response letters, and web pages. Apply them whenever you draft or edit a sentence. The PI maintains this file. If a project has its own STYLE.md, or a writing section in AGENTS.md, that file's rules win on conflicts.
 
+## Core principle: Knit terms piece-by-piece in context
+
+Every sentence must make sense inside its immediate context. Do not drop jargon, unexplained terms, or cold examples before the reader knows why they matter.
+
+1. **Introduce every substantial term before it carries weight.** Give the reader a plain handle for a concept before using it to explain anything else. Introduce only a few new terms at a time rather than overloading a sentence or paragraph. Italicize a key term on first use, and use it consistently after that.
+2. **Knit terms together one by one.** Pick up a term the previous sentence put on the table and connect one new piece onto it, building the argument stitch by stitch. Keep transitions natural and conversational rather than mechanical, and never leap to a new concept without linking it to what came right before.
+3. **Anchor the knitting with topic sentences.** Open each paragraph with a clear topic sentence framed in already-established terms that states the paragraph's general claim before introducing concrete examples, sub-concepts, or evidence. Do not open cold with a narrow example or a backward demonstrative ("This finding...").
+
 ## Sentences
 
 1. **Make the subject a strong keyword.** Lead with a key noun of the work, not a generic noun phrase, and prefer the work's own terms as grammatical subjects. The subject is the link that connects one sentence to the next.
@@ -25,15 +33,14 @@ These are the shared writing rules for all prose: papers, grants, notes, respons
 ## Content
 
 1. **No invented jargon or arbitrary labels.** Don't coin a term and then lean on it to explain something. Use words a reader already knows.
-2. **Introduce and define every substantial word.** Before a key term carries weight, give the reader a plain handle for it. Don't drop a loaded word cold. Italicize a key term on first use, and use it consistently after that.
-3. **Connect those words in a logical chain.** Once a word is on the table, reuse it as the bridge to the next idea, so each sentence picks up a term the previous one made available. Keep the transitions natural and conversational, though. Don't repeat words mechanically or write formulaic sentences just to satisfy this rule.
-4. **De-hedge.** State the claim. Keep substantive caveats that narrow a factual claim, and cut meta-qualifiers that label the contribution as narrow. The test is whether a qualifier narrows the fact or the framing of the fact: a qualifier that narrows the fact stays, and one that narrows the framing goes. Qualify without announcing that you are qualifying.
-5. **Never frontload limitations.**
-6. **Frame the design with confidence, not defensively.** Keep 100% scientific accuracy and respect the boundaries of the experiments, but present design choices as strong and deliberate. Sound like you are confidently explaining a strong design, not defending a weak one.
-7. **Be specific.** In Results, use exact numbers and anchor comparisons: "reduced error by 12% (from 34% to 22%)", not "significantly reduced error". Don't write "the model" when you mean BERT, or "in most cases" when you have the count.
-8. **In journal revisions, never refer to the reviewer or editor in the manuscript.**
-9. **Name a contrast with concrete opposites.** When a sentence turns on a reversal or tension, name both poles in concrete terms ("an asset in human-human teams, a liability in human-AI teams") instead of a vague motion verb ("accelerating", "shifting", "widening"). Give the consequence its own sentence so the claim lands.
-10. **Make topic sentences skimmable.** A reader who scans only the first sentence of each paragraph should still get the argument. So name the subject in the topic sentence. Don't open a paragraph with a backward demonstrative ("This finding...", "These results...") that sends the reader back to the previous paragraph to work out what it means. Anywhere in a paragraph, attach a noun to "this" ("this result shows", not "this shows").
+2. **Keep every term contextualized and linked.** Follow the core knitting rule above: define every substantial word before it carries weight, introduce only a few new concepts at a time, and carry established terms forward to bridge into the next idea.
+3. **De-hedge.** State the claim. Keep substantive caveats that narrow a factual claim, and cut meta-qualifiers that label the contribution as narrow. The test is whether a qualifier narrows the fact or the framing of the fact: a qualifier that narrows the fact stays, and one that narrows the framing goes. Qualify without announcing that you are qualifying.
+4. **Never frontload limitations.**
+5. **Frame the design with confidence, not defensively.** Keep 100% scientific accuracy and respect the boundaries of the experiments, but present design choices as strong and deliberate. Sound like you are confidently explaining a strong design, not defending a weak one.
+6. **Be specific.** In Results, use exact numbers and anchor comparisons: "reduced error by 12% (from 34% to 22%)", not "significantly reduced error". Don't write "the model" when you mean BERT, or "in most cases" when you have the count.
+7. **In journal revisions, never refer to the reviewer or editor in the manuscript.**
+8. **Name a contrast with concrete opposites.** When a sentence turns on a reversal or tension, name both poles in concrete terms ("an asset in human-human teams, a liability in human-AI teams") instead of a vague motion verb ("accelerating", "shifting", "widening"). Give the consequence its own sentence so the claim lands.
+9. **Make topic sentences skimmable.** A reader who scans only the first sentence of each paragraph should still get the argument. Frame the topic sentence in established terms and name the subject up front before bringing in concrete examples or new sub-concepts. Don't open a paragraph with a cold narrow example or a backward demonstrative ("This finding...", "These results...") that sends the reader back to the previous paragraph to work out what it means. Anywhere in a paragraph, attach a noun to "this" ("this result shows", not "this shows").
 
 ## Grammar
 
